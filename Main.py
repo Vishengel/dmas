@@ -1,8 +1,9 @@
-from Controller import Controller
+from Controller import *
 
-class Main():
-    def __init__(self):
-        controller = Controller()
+def main():
+    simulation = Controller(600, 500)
+    simulation.run()
 
 if __name__ == '__main__':
-    main = Main()
+    main()
+
