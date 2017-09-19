@@ -6,6 +6,8 @@ class Controller():
     def __init__(self, width, height):
         self.root = Tk()
         self.root.resizable(False, False)
+        self.width = width
+        self.height = height
         self.view = View(width, height)
         self.model = Model()
         self.initButtons()
@@ -32,13 +34,14 @@ class Controller():
         self.confirm_button['state'] = 'normal'
         #self.pauze_button['state'] = 'normal'
         self.reset_button['state'] = 'normal'
-        self.model.start_simulation()
+        self.model.start_simulation(self.width / 2, self.height / 2)
+        self.view.draw_agents(self.model.agents)
 
     def run_sim(self):
         try:
             iterations = int(self.entry_field.get())
-            self.model.play(iterations)
-
+            for i in range(iterations):
+                self.model.play()
         except:
             print("Only integers allowed!")
 
