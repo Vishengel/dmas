@@ -20,4 +20,4 @@ class Controller():
         self.model.dialogue_history.append(str(self.dialogue_counter))
         self.view.dialogue_content.set("\n".join(self.model.dialogue_history))
         #self.view.text.insert(INSERT, "\n".join(self.model.dialogue_history))
-        self.dialogue_counter += 1
+        self.dialogue_counter += 1        self.model.defendant.get_available_moves()
