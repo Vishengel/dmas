@@ -10,10 +10,14 @@ class Controller():
         self.height = height
         self.view = View(width, height)
         self.model = Model()
+        self.dialogue_counter = 0
 
     def run(self):
         self.view.run_button.config(command=self.execute_step)
         self.root.mainloop()
 
     def execute_step(self):
+        self.model.dialogue_history.append(str(self.dialogue_counter))
         self.view.dialogue_content.set("\n".join(self.model.dialogue_history))
+        #self.view.text.insert(INSERT, "\n".join(self.model.dialogue_history))
+        self.dialogue_counter += 1

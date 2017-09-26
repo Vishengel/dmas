@@ -20,6 +20,13 @@ class View(Frame):
         self.dialog_frame.pack_propagate(0)
         self.dialogue_content = StringVar()
         Label(self.dialog_frame, text="Dialog viewer", font = ("Helvetica",14), textvariable=self.dialogue_content).pack()
+        #self.text = Text(self.dialog_frame, width=self.width)
+
+        # Create scrollbar
+        #scrollbar = Scrollbar(self.text)
+        #self.text.config(yscrollcommand=scrollbar.set)
+        #scrollbar.pack(side=RIGHT, fill='y')
+        #self.text.pack(side=LEFT, fill='none')
         self.dialog_frame.pack(side=TOP)
 
         #button frame
