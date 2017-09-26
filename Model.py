@@ -2,9 +2,9 @@ from Agent import *
 
 class Model():
     def __init__(self):
-        self.agents = []
-        self.num_agents = 5
-        self.state = "init"
+        self.prosecutor = Agent("p")
+        self.defendant = Agent("d")
+
 
     def start_simulation(self, width, height):
         print("Simulation initialized!")

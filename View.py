@@ -17,7 +17,7 @@ class View(Frame):
         # Right frame
         self.dialog_frame = Frame(self, width = self.width, height = self.height / 2, relief=RAISED, borderwidth=3)
         self.dialog_frame.pack_propagate(0)
-        Label(self.dialog_frame, text="Dialog viewer", font = ("Helvetica",10)).pack()
+        Label(self.dialog_frame, text="Dialog viewer", font = ("Helvetica",14)).pack()
         self.dialog_frame.pack(side=TOP)
 
         #Bottom-right frame
@@ -27,11 +27,11 @@ class View(Frame):
 
         #First commitment store
         self.cs1_frame = Frame(self.cs_frame, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
-        Label(self.cs1_frame, text = "A", font = ("Helvetica",10)).pack()
+        Label(self.cs1_frame, text = "p", font = ("Helvetica",14)).pack()
         self.cs1_frame.pack(side=LEFT, expand=True, fill='both')
         #Second commitment store
         self.cs2_frame = Frame(self.cs_frame, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
-        Label(self.cs2_frame, text="B", font=("Helvetica",10)).pack()
+        Label(self.cs2_frame, text="d", font=("Helvetica",14)).pack()
         self.cs2_frame.pack(side=RIGHT, expand=True, fill='both')
 
         self.pack(fill=BOTH, expand=True)
