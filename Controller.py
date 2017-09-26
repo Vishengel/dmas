@@ -10,7 +10,7 @@ class Controller():
         self.height = height
         self.view = View(width, height)
         self.model = Model()
-        self.initButtons()
+        #self.initButtons()
 
     def initButtons(self):
         self.start_button = Button(self.view.button_frame, text = "Start simulation", command = self.start_sim)
