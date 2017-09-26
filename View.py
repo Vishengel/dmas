@@ -18,7 +18,8 @@ class View(Frame):
         # dialog frame
         self.dialog_frame = Frame(self, width = self.width, height = self.height / 2, relief=RAISED, borderwidth=3)
         self.dialog_frame.pack_propagate(0)
-        Label(self.dialog_frame, text="Dialog viewer", font = ("Helvetica",14)).pack()
+        self.dialogue_content = StringVar()
+        Label(self.dialog_frame, text="Dialog viewer", font = ("Helvetica",14), textvariable=self.dialogue_content).pack()
         self.dialog_frame.pack(side=TOP)
 
         #button frame
