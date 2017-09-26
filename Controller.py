@@ -11,17 +11,9 @@ class Controller():
         self.view = View(width, height)
         self.model = Model()
 
-    def start_sim(self):
-        self.model.start_simulation(self.width / 2, self.height / 2)
-        self.view.draw_agents(self.model.agents)
-
-    def run_sim(self):
-        try:
-            iterations = int(self.entry_field.get())
-            for i in range(iterations):
-                self.model.play()
-        except:
-            print("Only integers allowed!")
-
     def run(self):
+        self.view.run_button.config(command=self.run_game)
         self.root.mainloop()
+
+    def run_game(self):
+        print("Hello!!!!")

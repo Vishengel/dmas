@@ -12,15 +12,21 @@ class View(Frame):
         self.master.geometry("%dx%d+%d+%d" % (
         self.width, self.height, (user32.GetSystemMetrics(0) - width) / 2, (user32.GetSystemMetrics(1) - height) / 2))
         self.create_frames()
+        self.create_buttons()
 
     def create_frames(self):
-        # Right frame
+        # dialog frame
         self.dialog_frame = Frame(self, width = self.width, height = self.height / 2, relief=RAISED, borderwidth=3)
         self.dialog_frame.pack_propagate(0)
         Label(self.dialog_frame, text="Dialog viewer", font = ("Helvetica",14)).pack()
         self.dialog_frame.pack(side=TOP)
 
-        #Bottom-right frame
+        #button frame
+        self.button_frame = Frame(self.dialog_frame, width = self.width, height = self.height / 20, relief=RAISED, borderwidth=1)
+        self.button_frame.pack_propagate(0)
+        self.button_frame.pack(side = BOTTOM, fill = X)
+
+        #Bottom frame
         self.cs_frame = Frame(self, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
         self.cs_frame.pack_propagate(0)
         self.cs_frame.pack(side = BOTTOM)
@@ -36,14 +42,9 @@ class View(Frame):
 
         self.pack(fill=BOTH, expand=True)
 
-    def draw_agents(self, agents):
-        #Draw agents on screen, each with their own identifying tag
-        for i in range(len(agents)):
-            self.canvas.create_oval(agents[i].x, agents[i].y, agents[i].x + self.width / 20, agents[i].y + self.width / 20, tag = i, fill = "red")
-        self.canvas.itemconfigure(len(agents), fill = "blue")
-        #self.canvas.create_rectangle(agents[i-1].x, agents[-1].y, agents[-1].x + 30, agents[-1].y + 30, tag = len(agents) - 1, fill = "blue")
-
-    def move_agent(self, agent_tag, dx, dy):
-        self.canvas.move(agent_tag,dx,dy)
+    def create_buttons(self):
+        #run button
+        self.run_button = Button(self.button_frame, width = int(self.width / 60) ,text = "Run")
+        self.run_button.pack(side = LEFT, fill=X)
 
 
