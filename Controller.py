@@ -12,8 +12,8 @@ class Controller():
         self.model = Model()
 
     def run(self):
+        self.view.run_button.config(command=self.run_game)
         self.root.mainloop()
 
-    def draw_dialogue(self):
-        return "Test"
-
+    def run_game(self):
+        print("Hello!!!!")

@@ -1,9 +1,8 @@
 from Controller import *
 
 def main():
-    controller = Controller(1000, 800)
-    controller.run()
+    simulation = Controller(600,500)
+    simulation.run()
 
 if __name__ == '__main__':
     main()
-
