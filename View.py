@@ -19,6 +19,7 @@ class View(Frame):
         self.dialog_frame.pack_propagate(0)
         Label(self.dialog_frame, text="Dialog viewer", font = ("Helvetica",10)).pack()
         self.dialog_frame.pack(side=TOP)
+
         #Bottom-right frame
         self.cs_frame = Frame(self, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
         self.cs_frame.pack_propagate(0)
@@ -28,12 +29,12 @@ class View(Frame):
         self.cs1_frame = Frame(self.cs_frame, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
         Label(self.cs1_frame, text = "A", font = ("Helvetica",10)).pack()
         self.cs1_frame.pack(side=LEFT, expand=True, fill='both')
-        #Second commitmentstore
+        #Second commitment store
         self.cs2_frame = Frame(self.cs_frame, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
-        Label(self.cs2_frame, text = "B", font = ("Helvetica",10)).pack()
+        Label(self.cs2_frame, text="B", font=("Helvetica",10)).pack()
         self.cs2_frame.pack(side=RIGHT, expand=True, fill='both')
 
-        self.pack(fill = BOTH, expand = 1)
+        self.pack(fill=BOTH, expand=True)
 
     def draw_agents(self, agents):
         #Draw agents on screen, each with their own identifying tag
