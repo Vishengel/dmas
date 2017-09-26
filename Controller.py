@@ -12,8 +12,8 @@ class Controller():
         self.model = Model()
 
     def run(self):
-        self.view.run_button.config(command=self.run_game)
+        self.view.run_button.config(command=self.execute_step)
         self.root.mainloop()
 
-    def run_game(self):
-        print("Hello!!!!")
+    def execute_step(self):
+        self.model.defendant.get_available_moves()
