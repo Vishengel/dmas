@@ -1,0 +1,5 @@
+owes
+    foreach
+        facts.borrowed_from($person1, $person2, $amount)
+    assert
+        facts.owes($person1, $person2, $amount)

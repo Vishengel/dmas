@@ -5,6 +5,7 @@ class Agent():
         self.state = state
         self.strategy = strategy
         self.commitment_store = commitment_store
+        #self.commitment_store.activate('rules')
         self.move = move
 
     def set_opponent(self, opponent):
@@ -33,4 +34,13 @@ class Agent():
 
         return movelist
 
+    #Return a list containing all the facts from the agent's commitment store
+    def get_facts(self):
+        return "\n".join(self.commitment_store.get_kb('facts').dump_specific_facts())
+        #print("FIX THIS:")
+       # print(self.commitment_store.get_kb('facts').dump_specific_facts())
+        #return self.commitment_store.get_kb('facts').dump_specific_facts()
+    def get_rules(self):
+        (self.commitment_store.get_rb('rules').get_rules().get('owes'))
+        return self.commitment_store.get_rb('rules').get_rules()
 
