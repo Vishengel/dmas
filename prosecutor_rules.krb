@@ -1,0 +1,5 @@
+owes
+    use owes($person1, $person2, $amount)
+    when
+        prosecutor_facts.borrowed_from($person1, $person2, $amount)
+

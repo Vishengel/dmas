@@ -32,6 +32,7 @@ class View(Frame):
         self.cs_frame.pack_propagate(0)
         self.cs_frame.pack(side = BOTTOM)
 
+
         #First commitment store
         self.cs1_frame = Frame(self.cs_frame, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
         #Label(self.cs1_frame, text = prosecutor_name, font = ("Helvetica",14)).pack()
