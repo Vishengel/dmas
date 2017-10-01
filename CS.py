@@ -15,13 +15,19 @@ class CS():
 
     #Remove a given fact, using the printable string as a key
     def remove_fact(self, fact):
-        del self.facts[fact.printable()]
+        try:
+            del self.facts[fact.printable()]
+        except:
+            print("No such fact exists in this CS.")
 
     def add_rule(self, rule):
         self.rules[rule.printable()] = rule
 
     def remove_rule(self, rule):
-        del self.rules[rule.printable()]
+        try:
+            del self.rules[rule.printable()]
+        except:
+            print("No such rule exists in this CS.")
 
     #Return the printable version of all the facts in the commitment store
     def get_printable_facts(self):
@@ -51,16 +57,22 @@ class CS():
             if(self.facts_match(unified_conclusion, fact)):
                 #Check if conditions match facts in the commitment store
                 for condition in rule.conditions:
+                    #print("condition: ",condition.printable())
                     # Unify the conditions of the match with the fact
                     unified_condition = condition.unify(fact)
                     for key,value in self.facts.items():
+                        #print("Fact:", value.printable())
+                        #print("Condition: ", unified_condition.printable())
                         #If the found fact matches the condition of the rule, increment
                         if(self.facts_match(value, unified_condition)):
                             conditions_proven = conditions_proven + 1
+                            #print("Condition proven!")
+                            break
 
             #If every condition is proven, the rule proves the conclusion based on the conditions
             #This doesn't allow for chaining (yet). Therefore, conditions have to be facts within the commitment store
             #already.
+            #print("conditions_proven:", conditions_proven)
             if(conditions_proven == len(rule.conditions)):
                 applicable_rules.append(rule)
         return applicable_rules
