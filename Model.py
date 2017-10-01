@@ -15,14 +15,18 @@ class Model():
 
         #Add starting facts
         first_fact = Fact('borrowed_from', ('defendant', 'prosecutor', 10000), True)
+        second_fact = Fact('owes', ('defendant', 'prosecutor', 10000), True)
         self.prosecutor.commitment_store.add_fact(first_fact)
         self.defendant.commitment_store.add_fact(first_fact)
+
+        self.prosecutor.commitment_store.add_fact(second_fact)
 
         #Add starting rules
         first_rule = Rule([Fact('borrowed_from', ('x', 'y', 'amount'), True),]
                           ,Fact('owes', ('x', 'y', 'amount'), True), 'valid')
         self.prosecutor.commitment_store.add_rule(first_rule)
         self.defendant.commitment_store.add_rule(first_rule)
+
 
 
 

@@ -32,7 +32,34 @@ class Controller():
         self.root.mainloop()
 
     def execute_step(self):
-        pass
+        #Prove that the claim 'owes('defendant', 'prosecutor', 10000) holds
+        print("-----------------------------------------------------------")
+        test_fact = Fact('owes', ('defendant', 'prosecutor', 10000), True)
+        print("I'm trying to prove: ", test_fact.printable())
+        applicable_rules = self.model.prosecutor.commitment_store.prove_conclusion(test_fact)
+        if(len(applicable_rules) == 0):
+            print("This fact cannot be proven from the current facts and rules.")
+        else:
+            print("The following rule proves this claim: \n", applicable_rules[0].printable())
+            applicable_rules[0].conditions[0].unify(test_fact)
+            print("Because the following conditions are facts in the commitment store: \n",
+                  applicable_rules[0].conditions[0].unify(test_fact).printable() )
+
+        #Prove the negated fact
+        print("-----------------------------------------------------------")
+        test_fact.negation = not(test_fact.negation)
+        print("I'm trying to prove: ", test_fact.printable())
+        applicable_rules = self.model.prosecutor.commitment_store.prove_conclusion(test_fact)
+        if (len(applicable_rules) == 0):
+            print("This fact cannot be proven from the current facts and rules.")
+        else:
+            print("The following rule proves this claim: \n", applicable_rules[0].printable())
+            applicable_rules[0].conditions[0].unify(test_fact)
+            print("Because the following conditions are facts in the commitment store: \n",
+                  applicable_rules[0].conditions[0].unify(test_fact).printable())
+
+
+
 
 
 

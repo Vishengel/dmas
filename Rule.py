@@ -1,3 +1,4 @@
+import copy
 class Rule():
     def __init__(self, conditions, conclusion, property):
         self.conditions = conditions
@@ -10,3 +11,6 @@ class Rule():
         for condition in self.conditions:
             condition_list.append(condition.printable())
         return self.property + "( " +  " ∧ ".join(condition_list) + " -> " + self.conclusion.printable() + " )"
+
+
+

@@ -6,7 +6,7 @@ class View(Frame):
         super().__init__()
         self.width = width
         self.height = height
-        self.master.title("Simulation")
+        self.master.title("DRBL")
         # Get screen dimensions from OS
         user32 = ctypes.windll.user32
         self.master.geometry("%dx%d+%d+%d" % (
