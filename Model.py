@@ -1,32 +1,31 @@
 from Agent import *
-from pyke import knowledge_engine
+from CS import *
+from Fact import *
+from Rule import *
 
 class Model():
     def __init__(self):
         #Create and init agents
-        self.prosecutor = Agent("Prosecutor", "idle", "exhaustive", knowledge_engine.engine(__file__), "")
-        self.defendant = Agent("Defendant", "idle", "exhaustive", knowledge_engine.engine(__file__), "")
+        self.prosecutor = Agent("Prosecutor", "idle", "exhaustive", CS(), "")
+        self.defendant = Agent("Defendant", "idle", "exhaustive", CS(), "")
         self.prosecutor.set_opponent(self.defendant)
         self.defendant.set_opponent(self.prosecutor)
         self.dialogue_stack = []
         self.dialogue_history = []
 
         #Add starting facts
-        self.prosecutor.commitment_store.add_case_specific_fact('prosecutor_facts', 'borrowed_from', ('defendant', 'prosecutor', 10000))
-        self.prosecutor.commitment_store.add_case_specific_fact('prosecutor_facts', 'valid', ('rule', 'owes'))
+        first_fact = Fact('borrowed_from', ('defendant', 'prosecutor', 10000), True)
+        self.prosecutor.commitment_store.add_fact(first_fact)
+        self.defendant.commitment_store.add_fact(first_fact)
 
-        self.defendant.commitment_store.add_case_specific_fact('defendant_facts', 'borrowed_from', ('defendant', 'prosecutor', 10000))
-        self.defendant.commitment_store.add_case_specific_fact('defendant_facts', 'valid', ('rule', 'owes'))
+        #Add starting rules
+        first_rule = Rule([Fact('borrowed_from', ('x', 'y', 'amount'), True),]
+                          ,Fact('owes', ('x', 'y', 'amount'), True))
+        self.prosecutor.commitment_store.add_rule(first_rule)
+        self.defendant.commitment_store.add_rule(first_rule)
 
-        #Add starting claim made by prosecutor
-        #self.prosecutor.commitment_store.add_case_specific_fact('prosecutor_facts', 'owes', ('defendant', 'prosecutor', 10000))
 
 
-        """print("Prosecutor facts: ", self.prosecutor.get_facts())
-        print("Defendant facts: ", self.defendant.get_facts())
 
-        print("Prosecutor rules: ", "".join(self.prosecutor.get_rules().keys()))
-        print("Defendant rules: ", self.defendant.get_rules())
-        """
 
-        #print(self.defendant.commitment_store.prove_1_goal("facts.owes('defendant', 'prosecutor', 10000)"))
+
