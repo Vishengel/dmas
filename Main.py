@@ -3,7 +3,7 @@ from Controller import *
 
 
 def main():
-    simulation = Controller(600,500)
+    simulation = Controller(800,500)
     simulation.run()
 
 

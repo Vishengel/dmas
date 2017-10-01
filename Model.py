@@ -20,7 +20,7 @@ class Model():
 
         #Add starting rules
         first_rule = Rule([Fact('borrowed_from', ('x', 'y', 'amount'), True),]
-                          ,Fact('owes', ('x', 'y', 'amount'), True))
+                          ,Fact('owes', ('x', 'y', 'amount'), True), 'valid')
         self.prosecutor.commitment_store.add_rule(first_rule)
         self.defendant.commitment_store.add_rule(first_rule)
 
