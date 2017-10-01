@@ -54,10 +54,8 @@ class CS():
                     # Unify the conditions of the match with the fact
                     unified_condition = condition.unify(fact)
                     for key,value in self.facts.items():
-                        #Unify the found facts from the commitment_store with the query fact
-                        unified_value = value.unify(fact)
                         #If the found fact matches the condition of the rule, increment
-                        if(self.facts_match(unified_value, unified_condition)):
+                        if(self.facts_match(value, unified_condition)):
                             conditions_proven = conditions_proven + 1
 
             #If every condition is proven, the rule proves the conclusion based on the conditions
