@@ -22,8 +22,8 @@ class Controller():
         #Add name and starting content of both commitment stores
         Label(self.view.cs1_frame, text=self.model.prosecutor.name, font=("Helvetica", 14)).pack()
         Label(self.view.cs2_frame, text=self.model.defendant.name, font=("Helvetica", 14)).pack()
-        Label(self.view.cs1_frame, textvariable=self.left_cs_string, font=("Helvetica", 11)).pack()
-        Label(self.view.cs2_frame, textvariable=self.right_cs_string, font=("Helvetica", 11)).pack()
+        Label(self.view.cs1_frame, textvariable=self.left_cs_string, font=("Helvetica", 8)).pack()
+        Label(self.view.cs2_frame, textvariable=self.right_cs_string, font=("Helvetica", 8)).pack()
         #Set starting facts and rules to defendant and prosecutor labels
         self.left_cs_string.set(self.model.prosecutor.commitment_store.get_printable_facts() + "\n"
                                 + self.model.prosecutor.commitment_store.get_printable_rules())
