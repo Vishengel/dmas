@@ -6,7 +6,7 @@ class View(Frame):
         super().__init__()
         self.width = width
         self.height = height
-        self.master.title("Simulation")
+        self.master.title("DRBL")
         # Get screen dimensions from OS
         user32 = ctypes.windll.user32
         self.master.geometry("%dx%d+%d+%d" % (
@@ -15,44 +15,45 @@ class View(Frame):
         self.create_buttons()
 
     def create_frames(self):
+
         # dialog frame
         self.dialog_frame = Frame(self, width = self.width, height = self.height / 2, relief=RAISED, borderwidth=3)
         self.dialog_frame.pack_propagate(0)
-        self.dialogue_content = StringVar()
-        Label(self.dialog_frame, text="Dialog viewer", font = ("Helvetica",14), textvariable=self.dialogue_content).pack()
-        #self.text = Text(self.dialog_frame, width=self.width)
-
-        # Create scrollbar
-        #scrollbar = Scrollbar(self.text)
-        #self.text.config(yscrollcommand=scrollbar.set)
-        #scrollbar.pack(side=RIGHT, fill='y')
-        #self.text.pack(side=LEFT, fill='none')
         self.dialog_frame.pack(side=TOP)
+       #self.dialog_frame.configure(background='black')
+
+        """background_image = PhotoImage(file="courtroom.gif")
+        label = Label(self.dialog_frame, image=background_image)
+        label.place(x=0, y=0, relwidth=1, relheight=1)
+        label.image = background_image"""
+
 
         #button frame
         self.button_frame = Frame(self.dialog_frame, width = self.width, height = self.height / 20, relief=RAISED, borderwidth=1)
         self.button_frame.pack_propagate(0)
         self.button_frame.pack(side = BOTTOM, fill = X)
 
+
         #Bottom frame
         self.cs_frame = Frame(self, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
         self.cs_frame.pack_propagate(0)
         self.cs_frame.pack(side = BOTTOM)
 
+
         #First commitment store
         self.cs1_frame = Frame(self.cs_frame, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
-        Label(self.cs1_frame, text = "p", font = ("Helvetica",14)).pack()
+        #Label(self.cs1_frame, text = prosecutor_name, font = ("Helvetica",14)).pack()
         self.cs1_frame.pack(side=LEFT, expand=True, fill='both')
         #Second commitment store
         self.cs2_frame = Frame(self.cs_frame, width = self.width, height = self.height / 2, relief = RAISED, borderwidth = 3)
-        Label(self.cs2_frame, text="d", font=("Helvetica",14)).pack()
+       # Label(self.cs2_frame, text=defendant_name, font=("Helvetica",14)).pack()
         self.cs2_frame.pack(side=RIGHT, expand=True, fill='both')
 
         self.pack(fill=BOTH, expand=True)
 
     def create_buttons(self):
         #run button
-        self.run_button = Button(self.button_frame, width = int(self.width / 60) ,text = "Run")
+        self.run_button = Button(self.button_frame, width = int(self.width / 60) ,text = "Next move")
         self.run_button.pack(side = LEFT, fill=X)
 
 
