@@ -20,6 +20,10 @@ class CS():
         except:
             print("No such fact exists in this CS.")
 
+    #Check if a fact is already present in the CS
+    def fact_in_CS(self, fact):
+        return fact.printable() in self.facts
+
     def add_rule(self, rule):
         self.rules[rule.printable()] = rule
 
@@ -28,6 +32,10 @@ class CS():
             del self.rules[rule.printable()]
         except:
             print("No such rule exists in this CS.")
+
+    # Check if a rule is already present in the CS
+    def rule_in_CS(self, rule):
+        return rule.printable() in self.facts
 
     #Return the printable version of all the facts in the commitment store
     def get_printable_facts(self):
