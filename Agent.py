@@ -8,7 +8,7 @@ class Agent():
         self.state = state
         self.strategy = strategy
         self.commitment_store = commitment_store
-        self.move = move
+        self.last_move = move
         #Keep a list of possible reasons that can be used to defend a claim
         self.reasons = []
 
@@ -32,7 +32,7 @@ class Agent():
 
         #If opponent questioned a claim, agent has to search for a reason
         #that defends his claim
-        if(opponent_move.move_type == "question"):
+        if(opponent_move.move_type == "question" and self.last_move.move_type == "claim"):
             claim = opponent_move.sentence
             # Search the commitment store for a reason for the made claim
             # Get rules that prove the claim
@@ -51,6 +51,17 @@ class Agent():
                 return ["withdraw"]
 
 
+        #If opponent defends his claim with a reason,
+        #the agent can choose to question this reason
+        if(opponent_move.move_type == "reason"):
+            return ["question", "accept"]
+
+        # If opponent questioned a reason, the agent has to search for a rule
+        # that implies his reason
+        if(opponent_move.move_type == "question" and self.last_move.move_type == "reason"):
+            #Get a rule that has the reason as a conclusion
+            print(self.reasons[0][0].printable())
+            rules = self.commitment_store.prove_conclusion(self.reasons[0][0])
 
         return ["accept"]
 

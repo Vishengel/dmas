@@ -20,7 +20,7 @@ class View(Frame):
         self.dialog_frame = Frame(self, width = self.width, height = self.height / 2, relief=RAISED, borderwidth=3)
         self.dialog_frame.pack_propagate(0)
         self.dialog_frame.pack(side=TOP)
-       #self.dialog_frame.configure(background='black')
+        #self.dialog_frame.configure(background='black')
 
         """background_image = PhotoImage(file="courtroom.gif")
         label = Label(self.dialog_frame, image=background_image)
