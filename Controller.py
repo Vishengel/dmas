@@ -88,12 +88,23 @@ class Controller():
         if (move.move_type == "reason"):
             #Choose a reason to defend the earlier claim from the list of possible reasons
             #FOR NOW, CHOOSE FIRST ONE
-            self.current_dialogue.turn.reasons[0][0] = self.current_dialogue.turn.reasons[0][0].unify(move.sentence)
-            self.current_dialogue.turn.reasons[0][0].property = "reason-for"
-            self.current_dialogue.turn.reasons[0][0].claim = move.sentence
+            reason = self.current_dialogue.turn.reason_rules[0].conditions[0]
+            reason =  reason.unify(move.sentence)
+            reason.property = "reason-for"
+            reason.claim = move.sentence
             #Create a sub dialogue about this reason
-            move.sentence =  self.current_dialogue.turn.reasons[0][0]
+            move.sentence =  reason
             self.add_sub_dialogue(move)
+
+        elif (move.move_type == "applies"):
+            # Get a rule that has the reason as a conclusion
+            # Get the first rule for now
+            # Copy the rule to prevent the original rule from being changed
+            rule = copy.copy(self.current_dialogue.turn.reason_rules[0])
+            rule.property = "applies"
+            move.sentence = rule
+            self.add_sub_dialogue(move)
+
 
         elif (move.move_type != "claim" and move.move_type != "deny" and move.move_type != "refuse"):
             # Set dialogue move to the new move
@@ -102,6 +113,7 @@ class Controller():
             self.model.dialogue_history.append(self.current_dialogue.move.printable(self.current_dialogue.ID,
                                                                                     self.current_dialogue.turn))
             self.current_dialogue.swap_turns(self.model.prosecutor, self.model.defendant)
+
         else:
             if(move.move_type == "deny"):
                 self.add_sub_dialogue(move)

@@ -1,6 +1,7 @@
 from Move import *
 from Fact import *
 from random import randrange
+import copy
 class Agent():
 
     def __init__(self, name, state, strategy, commitment_store, move):
@@ -9,8 +10,8 @@ class Agent():
         self.strategy = strategy
         self.commitment_store = commitment_store
         self.last_move = move
-        #Keep a list of possible reasons that can be used to defend a claim
-        self.reasons = []
+        #Keep a list of possible rules for reasons that can be used to defend a claim
+        self.reason_rules = []
 
     def set_opponent(self, opponent):
         self.opponent = opponent
@@ -34,17 +35,19 @@ class Agent():
         #that defends his claim
         if(opponent_move.move_type == "question" and self.last_move.move_type == "claim"):
             claim = opponent_move.sentence
-            # Search the commitment store for a reason for the made claim
+            # Search the commitment store for rules that prove the claim
             # Get rules that prove the claim
-            reasons = []
             reason_rules = self.commitment_store.prove_conclusion(claim)
-            for rule in reason_rules:
-                reasons.append(rule.conditions)
+
+
+
+            #for rule in reason_rules:
+                #reasons.append(rule.conditions)
                 # Select one of the possible reasons
-            #Store reasons
-            self.reasons = reasons
+            #Store rules that apply that can provide reasons
+            self.reason_rules = reason_rules
             #If at least 1 reason is found, a reason move is possible
-            if(len(reasons) > 0):
+            if(len(reason_rules) > 0):
                 return ["reason", "withdraw"]
             #Else, a claim cannot be defended and has to be withdrawn
             else:
@@ -59,9 +62,13 @@ class Agent():
         # If opponent questioned a reason, the agent has to search for a rule
         # that implies his reason
         if(opponent_move.move_type == "question" and self.last_move.move_type == "reason"):
-            #Get a rule that has the reason as a conclusion
-            print(self.reasons[0][0].printable())
-            rules = self.commitment_store.prove_conclusion(self.reasons[0][0])
+            return ["applies", "withdraw"]
+
+
+
+
+
+
 
         return ["accept"]
 

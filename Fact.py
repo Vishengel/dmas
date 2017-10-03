@@ -6,7 +6,7 @@ class Fact():
         #possible properties: reason()
         self.property = ""
         #A fact can be a reason for a specific claim
-        self.claim = ""
+        self.claim = None
         #Possible property is 'reason-for' or 'reason-against'
 
 
@@ -15,14 +15,19 @@ class Fact():
         negation_symbol = ''
         if(self.negation):
             negation_symbol = '¬'
-        if(self.property == "reason-for"):
+        if(self.property != ""):
             if(self.claim.negation):
                 claim_negation = "¬"
             else:
                 claim_negation = ""
-            return ("reason(%s%s%s, %s%s%s, pro)" % (negation_symbol,self.predicate, self.args,
-                                           claim_negation, self.claim.predicate, self.claim.args))
+            string = ""
+            if(self.property == "reason-for"):
+                string = "pro"
+            else:
+                string = "con"
 
+            return ("reason(%s%s%s, %s%s%s, %s)" % (negation_symbol,self.predicate, self.args,
+                                           claim_negation, self.claim.predicate, self.claim.args,string ))
         return ("%s%s%s" % (negation_symbol,self.predicate, self.args))
 
     #Return the fact in the form reason(reason_for, claim, pro)
