@@ -26,6 +26,8 @@ class Model():
         self.prosecutor.commitment_store.add_rule(starting_rule)
         self.defendant.commitment_store.add_rule(starting_rule)
 
+        self.game_over = False
+
 
 
 

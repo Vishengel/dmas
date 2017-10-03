@@ -18,6 +18,14 @@ class Agent():
 
     #Extract the set of possible moves at any turn
     def get_available_moves(self, opponent_move):
+
+        #If opponent has accepted a claim, the agent passes
+        #so that the opponent can accept the other claims of the
+        #parent dialogues as well
+        print(opponent_move.move_type)
+        if(opponent_move.move_type == "accept"):
+            return ["pass"]
+
         #If opponent claimed a new sentence, agent can choose
         #to question, deny, refuse or accept this sentence
         if(opponent_move.move_type == "claim"):
@@ -38,8 +46,6 @@ class Agent():
             # Search the commitment store for rules that prove the claim
             # Get rules that prove the claim
             reason_rules = self.commitment_store.prove_conclusion(claim)
-
-
 
             #for rule in reason_rules:
                 #reasons.append(rule.conditions)
@@ -63,12 +69,6 @@ class Agent():
         # that implies his reason
         if(opponent_move.move_type == "question" and self.last_move.move_type == "reason"):
             return ["applies", "withdraw"]
-
-
-
-
-
-
 
         return ["accept"]
 
