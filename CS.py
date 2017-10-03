@@ -50,6 +50,7 @@ class CS():
             self.rule_list.append(value)
         return "\n".join(self.rule_list)
 
+
     #Ask the commitment store whether a given fact can be proven with the current facts and rules
     def prove_conclusion(self, fact):
         #Store rules that can prove the fact
@@ -62,7 +63,8 @@ class CS():
             conditions_proven = 0
             unified_conclusion = rule.conclusion.unify(fact)
             #If a rule is found where the conclusion matches the fact
-            if(self.facts_match(unified_conclusion, fact)):
+            #The rule also has to be a valid rule
+            if(self.facts_match(unified_conclusion, fact) and rule.property == "valid"):
                 #Check if conditions match facts in the commitment store
                 for condition in rule.conditions:
                     #print("condition: ",condition.printable())

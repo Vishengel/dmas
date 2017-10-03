@@ -45,6 +45,7 @@ class Controller():
         #Create starting move
         starting_claim = Fact('owes', ('Defendant', 'Prosecutor', 10000), True)
         starting_move = Move('claim', starting_claim)
+        self.model.prosecutor.last_move = starting_move
         #If a sentence is claimed, it has to be added to the commitment store!
         self.model.prosecutor.commitment_store.add_fact(starting_claim)
         #Create main dialogue
@@ -71,6 +72,8 @@ class Controller():
                 #Based on the move list, select an appropriate move according to the agent's strategy
                 move = self.current_dialogue.turn.select_move(movelist, self.current_dialogue.sentence)
                 #print(move.printable(self.current_dialogue.ID, self.current_dialogue.turn))
+                #Set the new move to be the latest move done by the agent
+                self.current_dialogue.turn.last_move = move
                 #Execute the chosen move in the dialogue game
                 self.execute_move(move, self.current_dialogue.turn)
                 #Set the dialogue to the appropriate next one before the next turn
@@ -84,13 +87,13 @@ class Controller():
         #Defend the claim made earlier
         if (move.move_type == "reason"):
             #Choose a reason to defend the earlier claim from the list of possible reasons
-            #FOR NOW, CHOOSE RANDOMLY
-            reason = self.current_dialogue.turn.reasons[0][0]
-            #Create a subdialogue about this reason
-            move.sentence = reason.unify(move.sentence)
+            #FOR NOW, CHOOSE FIRST ONE
+            self.current_dialogue.turn.reasons[0][0] = self.current_dialogue.turn.reasons[0][0].unify(move.sentence)
+            self.current_dialogue.turn.reasons[0][0].property = "reason-for"
+            self.current_dialogue.turn.reasons[0][0].claim = move.sentence
+            #Create a sub dialogue about this reason
+            move.sentence =  self.current_dialogue.turn.reasons[0][0]
             self.add_sub_dialogue(move)
-
-
 
         elif (move.move_type != "claim" and move.move_type != "deny" and move.move_type != "refuse"):
             # Set dialogue move to the new move

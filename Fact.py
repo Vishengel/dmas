@@ -3,13 +3,31 @@ class Fact():
         self.predicate = predicate
         self.args = args
         self.negation = not(negation)
+        #possible properties: reason()
+        self.property = ""
+        #A fact can be a reason for a specific claim
+        self.claim = ""
+        #Possible property is 'reason-for' or 'reason-against'
+
 
     #Return a nice, printable fact string
     def printable(self):
         negation_symbol = ''
         if(self.negation):
             negation_symbol = '¬'
+        if(self.property == "reason-for"):
+            if(self.claim.negation):
+                claim_negation = "¬"
+            else:
+                claim_negation = ""
+            return ("reason(%s%s%s, %s%s%s, pro)" % (negation_symbol,self.predicate, self.args,
+                                           claim_negation, self.claim.predicate, self.claim.args))
+
         return ("%s%s%s" % (negation_symbol,self.predicate, self.args))
+
+    #Return the fact in the form reason(reason_for, claim, pro)
+    #or (reason_against, claim, con)
+
 
     # Set arguments of one predicate to the arguments of the other one(very simple unification)
     #To prevent changing the original rule/fact, create new fact and return it, unified
