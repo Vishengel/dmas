@@ -29,7 +29,7 @@ class Controller():
         self.entry.insert(0, 1)
 
         #Add the content of the dialogue game to the dialog frame
-        Label(self.view.dialog_frame, text="Dialog viewer", font=("Helvetica", 10),
+        Label(self.view.dialog_frame, text="Dialog viewer", font=("Helvetica", 13),
               textvariable=self.dialogue_content).pack()
         #Add name and starting content of both commitment stores
         Label(self.view.cs1_frame, text=self.model.prosecutor.name, font=("Helvetica", 14)).pack()
@@ -63,29 +63,76 @@ class Controller():
 
 
     def execute_step(self):
-        steps = int(self.entry.get())
-        #No more than 100 steps at a time!
-        if(steps <= 100):
-            for i in range(steps):
-                #Current agent makes a move, based on the available move list
-                movelist = self.current_dialogue.turn.get_available_moves(self.current_dialogue.move)
-                #Based on the move list, select an appropriate move according to the agent's strategy
-                move = self.current_dialogue.turn.select_move(movelist, self.current_dialogue.sentence)
-                #print(move.printable(self.current_dialogue.ID, self.current_dialogue.turn))
-                #Set the new move to be the latest move done by the agent
-                self.current_dialogue.turn.last_move = move
-                #Execute the chosen move in the dialogue game
-                self.execute_move(move, self.current_dialogue.turn)
-                #Set the dialogue to the appropriate next one before the next turn
-                self.current_dialogue = self.model.dialogue_stack[-1]
-                self.update_labels()
+        if(not(self.model.game_over)):
+            steps = int(self.entry.get())
+            #No more than 100 steps at a time!
+            if(steps <= 100):
+                for i in range(steps):
+                    #Current agent makes a move, based on the available move list
+                    movelist = self.current_dialogue.turn.get_available_moves(self.current_dialogue.move)
+                    #Based on the move list, select an appropriate move according to the agent's strategy
+                    move = self.current_dialogue.turn.select_move(movelist, self.current_dialogue.sentence)
+                    #print(move.printable(self.current_dialogue.ID, self.current_dialogue.turn))
+                    #Set the new move to be the latest move done by the agent
+                    self.current_dialogue.turn.last_move = move
+                    #print( self.current_dialogue.turn.last_move.printable( self.current_dialogue.ID,
+                                                                        #self.current_dialogue.turn))
+                    #Execute the chosen move in the dialogue game
+                    self.execute_move(move, self.current_dialogue.turn)
+                    #Set the dialogue to the appropriate next one before the next turn
+                    #unless no more dialogues are left in the stack
+                    if (not(self.model.game_over)):
+                        self.current_dialogue = self.model.dialogue_stack[-1]
 
+                    self.update_labels()
+
+        else:
+            self.view.run_button['state'] = 'disabled'
+            #When the game is over, announce the winner of the dialogue game
+            if(self.model.defendant.last_move.move_type == "accept"):
+                self.model.dialogue_history.append("%s won the dialogue game." % (self.model.prosecutor.name))
+            else:
+                self.model.dialogue_history.append("%s won the dialogue game." % (self.model.defendant.name))
+            self.update_labels()
 
 
     #Execute the move selected by an agent
     def execute_move(self, move, agent):
+        #If agent accepts the opponent's claim..
+        if(move.move_type == "accept" or move.move_type == "withdraw"):
+            #Add opponent's claim to agent's commitment store
+            #when accepting
+            if(move.move_type == "accept"):
+                agent.commitment_store.add_fact(move.sentence)
+            #Remove own claim when withdrawing
+            else:
+                agent.commitment_store.remove_fact(move.sentence)
+
+            #The sub dialogue concerning this claim is now closed.
+            #Remove it from the dialogue stack and return to the parent dialogue.
+            self.model.dialogue_stack.pop()
+            self.current_dialogue.move = move
+            # Make new move show-able on the screen
+            self.model.dialogue_history.append(self.current_dialogue.move.printable(self.current_dialogue.ID,
+                                                                                    self.current_dialogue.turn))
+            #Change the sentence of the parent dialogue to be the acceptance of
+            #that dialogue's claim as well
+            #HOWEVER: If there are no dialogues left in the stack,
+            #this means that the game is over.
+            if(len(self.model.dialogue_stack) > 0):
+                #print(self.model.dialogue_stack[-1].ID,self.model.dialogue_stack[-1].turn.name, self.model.dialogue_stack[-1].move.move_type,
+                      #self.model.dialogue_stack[-1].sentence.printable())
+                self.model.dialogue_stack[-1].move.move_type = move.move_type
+                #PATCH TO FIX TURN ORDER AFTER A WITHDRAWAL
+                #FIX IT PROPERLY AFTER DEMO!!!!!!!
+                if(move.move_type == "withdraw"):
+                    self.model.dialogue_stack[-1].swap_turns(self.model.prosecutor, self.model.defendant)
+            else:
+                self.model.game_over = True
+
+
         #Defend the claim made earlier
-        if (move.move_type == "reason"):
+        elif (move.move_type == "reason"):
             #Choose a reason to defend the earlier claim from the list of possible reasons
             #FOR NOW, CHOOSE FIRST ONE
             reason = self.current_dialogue.turn.reason_rules[0].conditions[0]
@@ -106,7 +153,8 @@ class Controller():
             self.add_sub_dialogue(move)
 
 
-        elif (move.move_type != "claim" and move.move_type != "deny" and move.move_type != "refuse"):
+        elif (move.move_type != "claim" and move.move_type != "deny" and move.move_type != "refuse"
+              and move.move_type != "accept" and move.move_type != "withdraw"):
             # Set dialogue move to the new move
             self.current_dialogue.move = move
             # Make new move show-able on the screen
@@ -114,8 +162,7 @@ class Controller():
                                                                                     self.current_dialogue.turn))
             self.current_dialogue.swap_turns(self.model.prosecutor, self.model.defendant)
 
-        else:
-            if(move.move_type == "deny"):
+        elif (move.move_type == "deny"):
                 self.add_sub_dialogue(move)
 
 

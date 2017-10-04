@@ -12,6 +12,7 @@ class Dialogue():
         #Alternatively, this variable stores the latest move made in the dialogue
         self.move = move
 
+
     def swap_turns(self, agent1, agent2):
         # Change turn to the other agent
         if (self.turn == agent1):

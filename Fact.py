@@ -3,11 +3,11 @@ class Fact():
         self.predicate = predicate
         self.args = args
         self.negation = not(negation)
-        #possible properties: reason()
+        #Possible properties are 'reason-for' or 'reason-against'
         self.property = ""
         #A fact can be a reason for a specific claim
         self.claim = None
-        #Possible property is 'reason-for' or 'reason-against'
+
 
 
     #Return a nice, printable fact string
