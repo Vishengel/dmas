@@ -4,8 +4,8 @@ class Dialogue():
         self.ID = ID
         #The claim that starts the dialogue
         self.sentence = sentence
-        #The agent whose turn it is to move
-        self.turn = agent
+        #The agent who started the dialogue / is the proponent
+        self.proponent = agent
         #The Dialogue is still open
         self.open = True
         #A dialogue is opened with a move
@@ -15,7 +15,7 @@ class Dialogue():
 
     def swap_turns(self, agent1, agent2):
         # Change turn to the other agent
-        if (self.turn == agent1):
+        if (self.move.agent == agent1):
             self.turn = agent2
         else:
              self.turn = agent1

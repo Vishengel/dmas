@@ -7,8 +7,8 @@ class Model():
     def __init__(self):
         #Create and init agents
         #Agents are initialized with initial empty moves, to prevent None errors
-        self.prosecutor = Agent("Prosecutor", "idle", "dumb", CS(), Move("", None))
-        self.defendant = Agent("Defendant", "idle", "dumb", CS(), Move("", None))
+        self.prosecutor = Agent("Prosecutor", "idle", "random", CS(), Move("", None, None))
+        self.defendant = Agent("Defendant", "idle", "random", CS(), Move("", None, None))
         self.prosecutor.set_opponent(self.defendant)
         self.defendant.set_opponent(self.prosecutor)
         self.dialogue_stack = []
@@ -25,6 +25,10 @@ class Model():
                           ,Fact('owes', ('x', 'y', 'amount'), True), 'valid')
         self.prosecutor.commitment_store.add_rule(starting_rule)
         self.defendant.commitment_store.add_rule(starting_rule)
+
+        self.defendant.commitment_store.add_rule(Rule([Fact('loves', ('x', 'y'), True)]
+                          ,Fact('owes', ('x', 'y', 'amount'), False), 'valid'))
+        self.defendant.commitment_store.add_fact(Fact('loves', ('Defendant', 'Prosecutor'), True))
 
         self.game_over = False
 
