@@ -5,6 +5,7 @@ class Rule():
         self.conclusion = conclusion
         self.property = property
 
+
     #Return a nice, printable rule string
     def printable(self):
         condition_list = []
