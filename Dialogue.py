@@ -11,6 +11,11 @@ class Dialogue():
         #A dialogue is opened with a move
         #Alternatively, this variable stores the latest move made in the dialogue
         self.move = move
+        #A dialogue contains two list, keeping track of the moves that have been
+        #performed by each party in this dialogue
+        self.prosecutor_move_list = []
+        self.defendant_move_list = []
+
 
 
     def swap_turns(self, agent1, agent2):

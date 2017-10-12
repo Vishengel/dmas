@@ -7,8 +7,8 @@ class Model():
     def __init__(self):
         #Create and init agents
         #Agents are initialized with initial empty moves, to prevent None errors
-        self.prosecutor = Agent("Prosecutor", "idle", "random", CS(), Move("", None, None))
-        self.defendant = Agent("Defendant", "idle", "random", CS(), Move("", None, None))
+        self.prosecutor = Agent("Prosecutor", "idle", "dumb", CS(), Move("", None, None))
+        self.defendant = Agent("Defendant", "idle", "dumb", CS(), Move("", None, None))
         self.prosecutor.set_opponent(self.defendant)
         self.defendant.set_opponent(self.prosecutor)
         self.dialogue_stack = []
