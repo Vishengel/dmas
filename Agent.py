@@ -30,11 +30,13 @@ class Agent():
         #to question, deny, refuse or accept this sentence
         if(opponent_move.move_type == "claim" or self.last_move.move_type == "accept"):
             possible_moves =  ["question", "deny", "accept"]
-            sentence = opponent_move.sentence
-            sentence.negation = not(sentence.negation)
+            sentence = Fact(opponent_move.sentence.predicate, opponent_move.sentence.args, opponent_move.sentence.negation)
             #If the negation of the sentence is already in the agent's commitment store,
             #then denial is not allowed!
+            print("Negated sentence:", sentence.printable())
+            print("Original sentence:", opponent_move.sentence.printable())
             if(self.commitment_store.fact_in_CS(sentence)):
+                print("Denial not allowed!")
                 possible_moves.remove("deny")
             sentence.negation = not(sentence.negation)
             #return possible_moves

@@ -137,7 +137,7 @@ class Controller():
             #Remove own claim when withdrawing
             else:
                 agent.commitment_store.remove_fact(move.sentence)
-            
+
             #The sub dialogue concerning this claim is now closed.
             #Remove it from the dialogue stack and return to the parent dialogue.
             self.model.dialogue_stack.pop()
