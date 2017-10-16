@@ -32,6 +32,7 @@ class Controller():
         #Create main dialogue
         self.current_dialogue = Dialogue('1',  self.main_claim, self.model.prosecutor,
                                  starting_move)
+        self.current_dialogue.prosecutor_move_list.append(starting_move.move_type)
         #Add starting move string to dialogue frame
         self.model.dialogue_history.append(self.current_dialogue.move.printable(self.current_dialogue.ID))
 
@@ -46,10 +47,23 @@ class Controller():
     def execute_step(self):
         if(not(self.model.game_over)):
             #Current agent makes a move, based on the available move list
-            movelist = self.current_dialogue.turn.get_available_moves(self.current_dialogue.move)
+            movelist = self.current_dialogue.turn.get_available_moves(self.current_dialogue.move,
+                                                                      self.current_dialogue.proponent)
+            # Remove moves that were already performed by this agent in this dialogue, because
+            # repetition of same moves in a dialogue is not allowed
+            if(self.current_dialogue.turn == self.model.prosecutor):
+                movelist = list(set(movelist) - set(self.current_dialogue.prosecutor_move_list))
+            else:
+                movelist = list(set(movelist) - set(self.current_dialogue.defendant_move_list))
+            print("%s can make the following moves in dialogue %s:" % (self.current_dialogue.turn.name, self.current_dialogue.ID), movelist)
             #Based on the move list, select an appropriate move according to the agent's strategy
             move = self.current_dialogue.turn.select_move(movelist, self.current_dialogue.sentence)
-            #print(move.printable(self.current_dialogue.ID, self.current_dialogue.turn))
+            #Add move to the dialogue's list of moves for this agent
+            if(self.current_dialogue.turn == self.model.prosecutor):
+                self.current_dialogue.prosecutor_move_list.append(move.move_type)
+            else:
+                self.current_dialogue.defendant_move_list.append(move.move_type)
+
             #Set the new move to be the latest move done by the agent
             self.current_dialogue.turn.last_move = move
            # print( self.current_dialogue.turn.last_move.printable( self.current_dialogue.ID,
@@ -58,6 +72,13 @@ class Controller():
             self.execute_move(move, self.current_dialogue.turn)
             #Set the dialogue to the appropriate next one before the next turn
             #unless no more dialogues are left in the stack
+
+
+            print("Dialogue:", self.current_dialogue.ID)
+            print("P:", self.current_dialogue.prosecutor_move_list)
+            print("D:", self.current_dialogue.defendant_move_list)
+
+
             if (not(self.model.game_over)):
                 self.current_dialogue = self.model.dialogue_stack[-1]
             #If the main claim is no longer in the commitment store of the prosecutor,
@@ -111,7 +132,7 @@ class Controller():
             #this means that the game is over.
             if(len(self.model.dialogue_stack) > 0):
                 #Agent who accepts or withdraws can still make another move
-                print( self.model.dialogue_stack[-1].move.printable(self.model.dialogue_stack[-1].ID))
+                #print( self.model.dialogue_stack[-1].move.printable(self.model.dialogue_stack[-1].ID))
                 self.model.dialogue_stack[-1].turn = self.current_dialogue.turn
             else:
                 self.model.game_over = True

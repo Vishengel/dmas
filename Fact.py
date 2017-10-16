@@ -10,6 +10,7 @@ class Fact():
 
 
 
+
     #Return a nice, printable fact string
     def printable(self):
         negation_symbol = ''
