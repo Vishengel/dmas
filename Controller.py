@@ -18,29 +18,10 @@ class Controller():
 
     def run(self):
         self.view.run_button.config(command=self.execute_step)
+        self.view.reset_button.config(command=self.reset)
         # Create TKINTER text variables for updating the Label contents
-        self.dialogue_content = StringVar()
         self.left_cs_string = StringVar()
         self.right_cs_string = StringVar()
-
-        #Create entry field
-        self.entry = Entry(self.view.button_frame)
-        self.entry.pack(side = LEFT)
-        self.entry.insert(0, 1)
-
-        #Add the content of the dialogue game to the dialog frame
-        Label(self.view.dialog_frame, text="Dialog viewer", font=("Helvetica", 13),
-              textvariable=self.dialogue_content).pack()
-        #Add name and starting content of both commitment stores
-        Label(self.view.cs1_frame, text=self.model.prosecutor.name, font=("Helvetica", 14)).pack()
-        Label(self.view.cs2_frame, text=self.model.defendant.name, font=("Helvetica", 14)).pack()
-        Label(self.view.cs1_frame, textvariable=self.left_cs_string, font=("Helvetica", 8)).pack()
-        Label(self.view.cs2_frame, textvariable=self.right_cs_string, font=("Helvetica", 8)).pack()
-        #Set starting facts and rules to defendant and prosecutor labels
-        self.left_cs_string.set(self.model.prosecutor.commitment_store.get_printable_facts() + "\n"
-                                + self.model.prosecutor.commitment_store.get_printable_rules())
-        self.right_cs_string.set(self.model.defendant.commitment_store.get_printable_facts() + "\n"
-                                + self.model.defendant.commitment_store.get_printable_rules())
 
         #Create starting / main move
         self.main_claim = Fact('owes', ('Defendant', 'Prosecutor', 10000), True)
@@ -54,7 +35,7 @@ class Controller():
         #Add starting move string to dialogue frame
         self.model.dialogue_history.append(self.current_dialogue.move.printable(self.current_dialogue.ID))
 
-        self.update_labels()
+        self.update_text()
         #Change turns
         self.current_dialogue.swap_turns(self.model.prosecutor, self.model.defendant)
         #Add dialogue to dialogue stack
@@ -84,7 +65,7 @@ class Controller():
             if( not(self.model.prosecutor.commitment_store.fact_in_CS(self.main_claim))):
                 print("Prosecutor's main claim is gone!")
                 self.model.game_over = True
-            self.update_labels()
+            self.update_text()
 
         else:
             self.view.run_button['state'] = 'disabled'
@@ -93,7 +74,7 @@ class Controller():
                 self.model.dialogue_history.append("%s won the dialogue game." % (self.model.prosecutor.name))
             else:
                 self.model.dialogue_history.append("%s won the dialogue game." % (self.model.defendant.name))
-            self.update_labels()
+            self.update_text()
 
 
     #Execute the move selected by an agent
@@ -190,14 +171,29 @@ class Controller():
 
 
     #Update the contents of the commitment stores and the dialogue frame
-    def update_labels(self):
-        self.dialogue_content.set("\n".join(self.model.dialogue_history))
-        self.left_cs_string.set(self.model.prosecutor.commitment_store.get_printable_facts() + "\n"
-                                + self.model.prosecutor.commitment_store.get_printable_rules())
-        self.right_cs_string.set(self.model.defendant.commitment_store.get_printable_facts() + "\n"
-                                 + self.model.defendant.commitment_store.get_printable_rules())
+    def update_text(self):
+        self.view.dialogue_text.config(state='normal')
+        self.view.dialogue_text.delete(1.0, END)
+        self.view.dialogue_text.insert(END, "\n".join(self.model.dialogue_history) + "\n")
+        self.view.dialogue_text.config(state='disabled')
 
+        self.view.cs1_text.config(state='normal')
+        self.view.cs1_text.delete(1.0, END)
+        self.view.cs1_text.insert(END, self.model.prosecutor.commitment_store.get_printable_facts() + "\n"
+                                + self.model.prosecutor.commitment_store.get_printable_rules() + "\n")
+        self.view.cs1_text.config(state='disabled')
 
+        self.view.cs2_text.config(state='normal')
+        self.view.cs2_text.delete(1.0, END)
+        self.view.cs2_text.insert(END, self.model.defendant.commitment_store.get_printable_facts() + "\n"
+                                 + self.model.defendant.commitment_store.get_printable_rules() + "\n")
+        self.view.cs1_text.config(state='disabled')
+
+    def reset(self):
+        self.model = Model()
+        self.update_text()
+        self.view.run_button['state'] = 'normal'
+        self.run()
 
     #If a fact can be proven, print the rules and its conditions that prove that fact
     def print_prove(self, applicable_rules, fact):
