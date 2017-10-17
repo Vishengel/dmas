@@ -5,15 +5,16 @@ import ctypes
 class View(Frame):
     def __init__(self, width, height):
         super().__init__()
-
+        self.width = width
+        self.height = height
         self.master.title("DRBL")
         # Get screen dimensions from OS
         user32 = ctypes.windll.user32
-        #self.master.geometry("%dx%d+%d+%d" % (
-        #    self.width, self.height, (user32.GetSystemMetrics(0) - width) / 2,
-        #    (user32.GetSystemMetrics(1) - height) / 2))
-        self.width = 1500
-        self.height = 780
+        self.master.geometry("%dx%d+%d+%d" % (
+            self.width, self.height, (user32.GetSystemMetrics(0) - width) / 2,
+            (user32.GetSystemMetrics(1) - height) / 2))
+        #self.width = 1500
+        #self.height = 780
         self.create_frames()
         self.create_buttons()
 
@@ -28,7 +29,7 @@ class View(Frame):
         self.dialog_frame.grid_columnconfigure(0, weight=1)
 
          # button frame
-        self.button_frame = Frame(self, width=self.width, height=self.height / 20, relief=RAISED,
+        self.button_frame = Frame(self, width=self.width, height=self.height / 10, relief=RAISED,
                                   borderwidth=13)
         self.button_frame.pack_propagate(0)
         self.button_frame.pack(side=BOTTOM, fill=BOTH, expand=1)
@@ -36,7 +37,7 @@ class View(Frame):
 
 
         # Bottom frame
-        self.cs_frame = Frame(self, width=self.width, height=self.height / 2, relief=RAISED, borderwidth=3)
+        self.cs_frame = Frame(self, width=self.width, height=self.height / 2.5, relief=RAISED, borderwidth=3)
         self.cs_frame.pack_propagate(0)
         self.cs_frame.pack(side=BOTTOM)
         self.cs_frame.grid_rowconfigure(2, weight=1)
