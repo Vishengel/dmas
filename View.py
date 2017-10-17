@@ -27,7 +27,7 @@ class View(Frame):
         self.dialog_frame.grid_columnconfigure(0, weight=1)
 
          # button frame
-        self.button_frame = Frame(self, width=self.width, height=self.height / 20, relief=RAISED,
+        self.button_frame = Frame(self, width=self.width, height=self.height / 10, relief=RAISED,
                                   borderwidth=13)
         self.button_frame.pack_propagate(0)
         self.button_frame.pack(side=BOTTOM, fill=BOTH, expand=1)
@@ -35,7 +35,7 @@ class View(Frame):
 
 
         # Bottom frame
-        self.cs_frame = Frame(self, width=self.width, height=self.height / 2, relief=RAISED, borderwidth=3)
+        self.cs_frame = Frame(self, width=self.width, height=self.height / 2.5, relief=RAISED, borderwidth=3)
         self.cs_frame.pack_propagate(0)
         self.cs_frame.pack(side=BOTTOM)
         self.cs_frame.grid_rowconfigure(2, weight=1)
@@ -53,7 +53,7 @@ class View(Frame):
 
         # create the dialogue text widget
         self.dialogue_text = Text(self.dialog_frame, borderwidth=3, relief="sunken")
-        self.dialogue_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.dialogue_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.dialogue_text.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
         # create a Scrollbar and associate it with txt
@@ -69,7 +69,7 @@ class View(Frame):
 
         # create commitment store text widgets
         self.cs1_text = Text(self.cs1_frame, borderwidth=3, relief="sunken")
-        self.cs1_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.cs1_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.cs1_text.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
         self.cs1_text.grid_columnconfigure(1, weight=1)
 
@@ -80,7 +80,7 @@ class View(Frame):
 
         # create commitment store text widgets
         self.cs2_text = Text(self.cs2_frame, borderwidth=3, relief="sunken")
-        self.cs2_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.cs2_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.cs2_text.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
 
 
