@@ -5,14 +5,15 @@ import ctypes
 class View(Frame):
     def __init__(self, width, height):
         super().__init__()
-        self.width = width
-        self.height = height
+
         self.master.title("DRBL")
         # Get screen dimensions from OS
         user32 = ctypes.windll.user32
-        self.master.geometry("%dx%d+%d+%d" % (
-            self.width, self.height, (user32.GetSystemMetrics(0) - width) / 2,
-            (user32.GetSystemMetrics(1) - height) / 2))
+        #self.master.geometry("%dx%d+%d+%d" % (
+        #    self.width, self.height, (user32.GetSystemMetrics(0) - width) / 2,
+        #    (user32.GetSystemMetrics(1) - height) / 2))
+        self.width = 1500
+        self.height = 780
         self.create_frames()
         self.create_buttons()
 
