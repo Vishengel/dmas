@@ -55,7 +55,7 @@ class View(Frame):
 
         # create the dialogue text widget
         self.dialogue_text = Text(self.dialog_frame, borderwidth=3, relief="sunken")
-        self.dialogue_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.dialogue_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.dialogue_text.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
         # create a Scrollbar and associate it with txt
@@ -71,7 +71,7 @@ class View(Frame):
 
         # create commitment store text widgets
         self.cs1_text = Text(self.cs1_frame, borderwidth=3, relief="sunken")
-        self.cs1_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.cs1_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.cs1_text.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
         self.cs1_text.grid_columnconfigure(1, weight=1)
 
@@ -82,7 +82,7 @@ class View(Frame):
 
         # create commitment store text widgets
         self.cs2_text = Text(self.cs2_frame, borderwidth=3, relief="sunken")
-        self.cs2_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.cs2_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.cs2_text.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
 
 
