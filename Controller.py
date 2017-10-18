@@ -33,8 +33,10 @@ class Controller():
         self.current_dialogue = Dialogue('1',  self.main_claim, self.model.prosecutor,
                                  starting_move)
         self.current_dialogue.prosecutor_move_list.append(starting_move.move_type)
+        self.current_dialogue.last_prosecutor_move = starting_move
+
         #Add starting move string to dialogue frame
-        self.model.dialogue_history.append(self.current_dialogue.move.printable(self.current_dialogue.ID))
+        self.model.add_dialogue_content(self.current_dialogue.move,self.current_dialogue.ID)
 
         self.update_text()
         #Change turns
@@ -46,18 +48,29 @@ class Controller():
 
     def execute_step(self):
         if(not(self.model.game_over)):
-            #Current agent makes a move, based on the available move list
-            movelist = self.current_dialogue.turn.get_available_moves(self.current_dialogue.move,
+            #Current agent makes a move, based on the available move list and his opponent's last move
+            if(self.current_dialogue.turn == self.model.prosecutor):
+                movelist = self.current_dialogue.turn.get_available_moves(self.current_dialogue.last_defendant_move,
                                                                       self.current_dialogue.proponent)
+            else:
+                movelist = self.current_dialogue.turn.get_available_moves(self.current_dialogue.last_prosecutor_move,
+                                                                      self.current_dialogue.proponent)
+
             # Remove moves that were already performed by this agent in this dialogue, because
             # repetition of same moves in a dialogue is not allowed
-            if(self.current_dialogue.turn == self.model.prosecutor):
-                movelist = list(set(movelist) - set(self.current_dialogue.prosecutor_move_list))
-            else:
-                movelist = list(set(movelist) - set(self.current_dialogue.defendant_move_list))
-            print("%s can make the following moves in dialogue %s:" % (self.current_dialogue.turn.name, self.current_dialogue.ID), movelist)
+            #Set the latest agent move of the dialogue to the current move
+            movelist = self.model.remove_repeating_moves(movelist, self.current_dialogue)
+
+            #print("%s can make the following moves in dialogue %s:" % (self.current_dialogue.turn.name, self.current_dialogue.ID), movelist)
             #Based on the move list, select an appropriate move according to the agent's strategy
+            #Add this move to one of the two agent's latest move, in this dialogue
             move = self.current_dialogue.turn.select_move(movelist, self.current_dialogue.sentence)
+            if (self.current_dialogue.turn == self.model.prosecutor):
+                self.current_dialogue.last_prosecutor_move = move
+            else:
+                self.current_dialogue.last_defendant_move = move
+
+
             #Add move to the dialogue's list of moves for this agent
             if(self.current_dialogue.turn == self.model.prosecutor):
                 self.current_dialogue.prosecutor_move_list.append(move.move_type)
@@ -73,10 +86,9 @@ class Controller():
             #Set the dialogue to the appropriate next one before the next turn
             #unless no more dialogues are left in the stack
 
-
-            print("Dialogue:", self.current_dialogue.ID)
-            print("P:", self.current_dialogue.prosecutor_move_list)
-            print("D:", self.current_dialogue.defendant_move_list)
+            #print("Dialogue:", self.current_dialogue.ID)
+            #print("P:", self.current_dialogue.prosecutor_move_list)
+            #print("D:", self.current_dialogue.defendant_move_list)
 
 
             if (not(self.model.game_over)):
@@ -100,8 +112,37 @@ class Controller():
 
     #Execute the move selected by an agent
     def execute_move(self, move, agent):
+
+        if(move.move_type == "arbiter"):
+            self.model.dialogue_stack.pop()
+            self.model.dialogue_stack[-1].swap_turns(self.model.prosecutor, self.model.defendant)
+
+            judgement = self.model.judge.arbiter_call(move.sentence)
+            #If the judge decides that a rule is valid, add the rule to both parties' commitment store
+            if(judgement == True):
+                self.model.dialogue_history.append("%s. %s" % (self.current_dialogue.ID, "Judge: this rule is valid."))
+                self.model.prosecutor.commitment_store.add_rule(move.sentence)
+                self.model.defendant.commitment_store.add_rule(move.sentence)
+
+                #BIG PATCH! NO IDEA WHY THIS WORKS.... ;_______________________________;
+                if (self.current_dialogue.turn == self.model.prosecutor):
+                    self.model.dialogue_stack[-1].turn = self.model.defendant
+                else:
+                    self.model.dialogue_stack[-1].turn = self.model.prosecutor
+
+            #Else, remove the rule from both parties' commitment store
+            else:
+                self.model.dialogue_history.append("%s. %s" % (self.current_dialogue.ID, "Judge: this rule is NOT valid."))
+                self.model.prosecutor.commitment_store.remove_rule(move.sentence)
+                self.model.defendant.commitment_store.remove_rule(move.sentence)
+
+
+
+        elif(move.move_type == "accept-arbiter"):
+            self.model.dialogue_history.append(self.current_dialogue.move.printable(self.current_dialogue.ID))
+
         #If agent accepts the opponent's claim..
-        if(move.move_type == "accept" or move.move_type == "withdraw"):
+        elif(move.move_type == "accept" or move.move_type == "withdraw"):
             #Add opponent's claim to agent's commitment store
             #when accepting
             if(move.move_type == "accept"):
@@ -168,11 +209,14 @@ class Controller():
 
             self.current_dialogue.swap_turns(self.model.prosecutor, self.model.defendant)
 
-        elif (move.move_type == "deny"):
+        elif (move.move_type == "deny" or move.move_type == "arbiter"):
                 self.add_sub_dialogue(move)
 
-
-
+        elif(move.move_type == "valid"):
+            rule = copy.copy(self.current_dialogue.turn.reason_rules[0])
+            rule.property = "valid"
+            move.sentence = rule
+            self.add_sub_dialogue(move)
 
     def add_sub_dialogue(self, move):
         old_dialogue_ID = self.current_dialogue.ID
@@ -181,9 +225,17 @@ class Controller():
         # old_sentence = self.current_dialogue.sentence
         # negated_sentence = Fact(old_sentence.predicate, old_sentence.args, old_sentence.negation)
         # print(negated_sentence.printable())
-        new_sub_dialogue = Dialogue(old_dialogue_ID + "-1", move.sentence,
+        new_sub_dialogue = Dialogue(old_dialogue_ID + "-" + str(1 + self.current_dialogue.subdialogues) , move.sentence,
                                     self.current_dialogue.turn, move)
+        #The proponent of the claim that starts this sub-dialogue's move is recorded
+        if(self.current_dialogue.turn == self.model.prosecutor):
+            new_sub_dialogue.last_prosecutor_move = move
+        else:
+            new_sub_dialogue.last_defendant_move = move
+
         self.model.dialogue_history.append(new_sub_dialogue.move.printable(new_sub_dialogue.ID))
+
+        self.current_dialogue.subdialogues = self.current_dialogue.subdialogues + 1
 
         # Change turn to the other agent
         new_sub_dialogue.swap_turns(self.model.prosecutor, self.model.defendant)

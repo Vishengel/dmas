@@ -16,6 +16,11 @@ class Dialogue():
         self.prosecutor_move_list = []
         self.defendant_move_list = []
 
+        #Keep track of the last moves performed by both parties
+        self.last_prosecutor_move = None
+        self.last_defendant_move = None
+        #Keep track of how many sub-dialogues have been opened in this dialogue
+        self.subdialogues = 0
 
 
     def swap_turns(self, agent1, agent2):

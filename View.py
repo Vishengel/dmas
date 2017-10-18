@@ -16,18 +16,36 @@ class View(Frame):
         self.create_frames()
         self.create_buttons()
 
+
     def create_frames(self):
+        #top screen, contains both dialog frames
+        self.main_frame = Frame(self, width=self.width / 2, height=self.height / 2, relief=RAISED, borderwidth=3)
+        self.main_frame.pack_propagate(0)
+        self.main_frame.pack(side=TOP, fill=BOTH)
+        self.main_frame.grid_propagate(False)
+
         # dialog frame
-        self.dialog_frame = Frame(self, width=self.width, height=self.height / 2, relief=RAISED, borderwidth=3)
+        self.dialog_frame = Frame(self.main_frame, width=self.width/2, height=self.height / 2, relief=RAISED, borderwidth=3)
         self.dialog_frame.pack_propagate(0)
-        self.dialog_frame.pack(side=TOP)
+        self.dialog_frame.pack(fill = BOTH)
         self.dialog_frame.grid_propagate(False)
+
+        # natural language frame
+        self.language_frame = Frame(self.main_frame, width=self.width/2, height=self.height / 2, relief=RAISED, borderwidth=3)
+        self.language_frame.pack_propagate(0)
+        #self.language_frame.pack(side=RIGHT)
+        self.language_frame.grid_propagate(False)
+
         # implement stretchability
         self.dialog_frame.grid_rowconfigure(0, weight=1)
         self.dialog_frame.grid_columnconfigure(0, weight=1)
 
+        self.language_frame.grid_rowconfigure(0, weight=1)
+        self.language_frame.grid_columnconfigure(0, weight=1)
+
+
          # button frame
-        self.button_frame = Frame(self, width=self.width, height=self.height / 20, relief=RAISED,
+        self.button_frame = Frame(self, width=self.width, height=self.height / 10, relief=RAISED,
                                   borderwidth=13)
         self.button_frame.pack_propagate(0)
         self.button_frame.pack(side=BOTTOM, fill=BOTH, expand=1)
@@ -56,10 +74,18 @@ class View(Frame):
         self.dialogue_text.config(font=("consolas", 12), undo=True, wrap='word')
         self.dialogue_text.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
+        self.natural_text = Text(self.language_frame, borderwidth=3, relief="sunken")
+        self.natural_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.natural_text.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+
         # create a Scrollbar and associate it with txt
         dialogue_sb = Scrollbar(self.dialog_frame, command=self.dialogue_text.yview)
         dialogue_sb.grid(row=0, column=1, sticky='nsew')
         self.dialogue_text['yscrollcommand'] = dialogue_sb.set
+
+        self.natural_text['yscrollcommand'] = dialogue_sb.set
+
+
 
         p_name = Label(self.cs1_frame, text="Prosecutor", font=("Helvetica", 14))
         p_name.grid(row=0, column=0, columnspan=2)
