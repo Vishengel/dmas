@@ -11,5 +11,5 @@ class YamlReader():
         with open(file_path, 'r') as file:
             yaml_file = load(file)
 
-        print(yaml_file['facts']['fact1'])
+        print(yaml_file['facts']['fact1']['args'])
 

@@ -9,6 +9,8 @@ facts:
    -10000
   neg:
    -true
+  cs:
+   -"both"
 
  fact2:
   pred:
@@ -19,6 +21,8 @@ facts:
    -10000
   neg:
    -true
+  cs:
+   -"prosecutor"
 
 rules:
  rule1:
