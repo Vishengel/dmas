@@ -1,0 +1,27 @@
+facts:
+
+ fact1:
+  pred:
+   -"borrowed_from"
+  args:
+   -"defendant"
+   -"prosecutor"
+   -10000
+  neg:
+   -true
+
+ fact2:
+  pred:
+   -"owes"
+  args:
+   -"defendant"
+   -"prosecutor"
+   -10000
+  neg:
+   -true
+
+rules:
+ rule1:
+  cond:
+  conc:
+  prop:

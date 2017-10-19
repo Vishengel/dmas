@@ -13,6 +13,8 @@ class View(Frame):
         self.master.geometry("%dx%d+%d+%d" % (
             self.width, self.height, (user32.GetSystemMetrics(0) - width) / 2,
             (user32.GetSystemMetrics(1) - height) / 2))
+        #self.width = 1500
+        #self.height = 780
         self.create_frames()
         self.create_buttons()
 
@@ -53,7 +55,7 @@ class View(Frame):
 
 
         # Bottom frame
-        self.cs_frame = Frame(self, width=self.width, height=self.height / 2, relief=RAISED, borderwidth=3)
+        self.cs_frame = Frame(self, width=self.width, height=self.height / 2.5, relief=RAISED, borderwidth=3)
         self.cs_frame.pack_propagate(0)
         self.cs_frame.pack(side=BOTTOM)
         self.cs_frame.grid_rowconfigure(2, weight=1)
@@ -71,7 +73,7 @@ class View(Frame):
 
         # create the dialogue text widget
         self.dialogue_text = Text(self.dialog_frame, borderwidth=3, relief="sunken")
-        self.dialogue_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.dialogue_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.dialogue_text.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
         self.natural_text = Text(self.language_frame, borderwidth=3, relief="sunken")
@@ -95,7 +97,7 @@ class View(Frame):
 
         # create commitment store text widgets
         self.cs1_text = Text(self.cs1_frame, borderwidth=3, relief="sunken")
-        self.cs1_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.cs1_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.cs1_text.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
         self.cs1_text.grid_columnconfigure(1, weight=1)
 
@@ -106,7 +108,7 @@ class View(Frame):
 
         # create commitment store text widgets
         self.cs2_text = Text(self.cs2_frame, borderwidth=3, relief="sunken")
-        self.cs2_text.config(font=("consolas", 12), undo=True, wrap='word')
+        self.cs2_text.config(font=("Helvetica", 12), undo=True, wrap='word')
         self.cs2_text.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
 
 
