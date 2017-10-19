@@ -28,7 +28,7 @@ class Controller():
         starting_move = Move('claim',  self.main_claim, self.model.prosecutor)
         self.model.prosecutor.last_move = starting_move
         #If a sentence is claimed, it has to be added to the commitment store!
-        self.model.prosecutor.commitment_store.add_fact( self.main_claim)
+        self.model.prosecutor.commitment_store.add( self.main_claim)
         #Create main dialogue
         self.current_dialogue = Dialogue('1',  self.main_claim, self.model.prosecutor,
                                  starting_move)
@@ -121,8 +121,8 @@ class Controller():
             #If the judge decides that a rule is valid, add the rule to both parties' commitment store
             if(judgement == True):
                 self.model.dialogue_history.append("%s. %s" % (self.current_dialogue.ID, "Judge: this rule is valid."))
-                self.model.prosecutor.commitment_store.add_rule(move.sentence)
-                self.model.defendant.commitment_store.add_rule(move.sentence)
+                self.model.prosecutor.commitment_store.add(move.sentence)
+                self.model.defendant.commitment_store.add(move.sentence)
 
                 #BIG PATCH! NO IDEA WHY THIS WORKS.... ;_______________________________;
                 if (self.current_dialogue.turn == self.model.prosecutor):
@@ -146,19 +146,19 @@ class Controller():
             #Add opponent's claim to agent's commitment store
             #when accepting
             if(move.move_type == "accept"):
-                agent.commitment_store.add_fact(move.sentence)
+                agent.commitment_store.add(move.sentence)
                 #If the negation of this claim exist, remove this claim
                 if(isinstance(move.sentence,Fact)):
                     negated_sentence = Fact(move.sentence.predicate, move.sentence.args, move.sentence.negation)
                     #print("Sentence:", move.sentence.printable())
                     #print("Negated sentence:", negated_sentence.printable())
 
-                    agent.commitment_store.remove_fact(negated_sentence)
-                agent.commitment_store.add_fact(move.sentence)
+                    agent.commitment_store.remove(negated_sentence)
+                agent.commitment_store.add(move.sentence)
 
             #Remove own claim when withdrawing
             else:
-                agent.commitment_store.remove_fact(move.sentence)
+                agent.commitment_store.remove(move.sentence)
 
             #The sub dialogue concerning this claim is now closed.
             #Remove it from the dialogue stack and return to the parent dialogue.
@@ -220,8 +220,10 @@ class Controller():
 
     def add_sub_dialogue(self, move):
         old_dialogue_ID = self.current_dialogue.ID
-        # Add denied sentence to proponent's commitment store
-        self.current_dialogue.turn.commitment_store.add_fact(move.sentence)
+        # Add sentence to proponent's commitment store
+        self.current_dialogue.turn.commitment_store.add(move.sentence)
+
+
         # old_sentence = self.current_dialogue.sentence
         # negated_sentence = Fact(old_sentence.predicate, old_sentence.args, old_sentence.negation)
         # print(negated_sentence.printable())
