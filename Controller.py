@@ -24,7 +24,8 @@ class Controller():
         self.right_cs_string = StringVar()
 
         #Create starting / main move
-        self.main_claim = Fact('owes', ('Defendant', 'Prosecutor', 10000), True)
+        #self.main_claim = Fact('owes', ('Defendant', 'Prosecutor', 10000), True)
+        self.main_claim = Fact('valid_contract', ('Prosecutor', 'Defendant'), True)
         starting_move = Move('claim',  self.main_claim, self.model.prosecutor)
         self.model.prosecutor.last_move = starting_move
         #If a sentence is claimed, it has to be added to the commitment store!

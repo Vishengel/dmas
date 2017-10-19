@@ -18,13 +18,24 @@ class Model():
         self.dialogue_history_natural = []
 
         #Add starting facts
-        first_fact = Fact('borrowed_from', ('Defendant', 'Prosecutor', 10000), True)
-        self.prosecutor.commitment_store.add_fact(first_fact)
-        self.defendant.commitment_store.add_fact(first_fact)
+        first_fact = Fact('heard_offer', ('Smith and Baker', 'Prosecutor', 'Defendant'), True)
+        self.prosecutor.commitment_store.add(first_fact)
+
+        second_fact = Fact('written_agreement', ('Prosecutor', 'Defendant'), False)
+        self.prosecutor.commitment_store.add(second_fact)
+        self.defendant.commitment_store.add(second_fact)
+
+        third_fact = Fact('document_provided_too_late', ('document'), True)
+        self.prosecutor.commitment_store.add(third_fact)
+        self.defendant.commitment_store.add(third_fact)
         #self.defendant.commitment_store.add_fact( Fact('owes', ('Defendant', 'Prosecutor', 10000), False) )
 
+        fourth_fact = Fact('documented_insanity', ('defendant', 'document'), True)
+        self.defendant.commitment_store.add(fourth_fact)
+
         #Add starting rules
-        starting_rule = Rule([Fact('borrowed_from', ('x', 'y', 'amount'), True)]
+        """
+        first_rule = Rule([Fact('heard_offer', ('x', 'y', 'amount'), True)]
                           ,Fact('owes', ('x', 'y', 'amount'), True), 'valid')
         self.prosecutor.commitment_store.add_rule(starting_rule)
         self.defendant.commitment_store.add_rule(starting_rule)
@@ -32,8 +43,9 @@ class Model():
         self.defendant.commitment_store.add_rule(Rule([Fact('loves', ('x', 'y'), True)]
                           ,Fact('owes', ('x', 'y', 'amount'), False), 'valid'))
         self.defendant.commitment_store.add_fact(Fact('loves', ('Defendant', 'Prosecutor'), True))
-
+        """
         self.game_over = False
+
 
     #Add the dialogue moves as text to both the logical and natural language frames
     def add_dialogue_content(self, move, dialogue_ID):
