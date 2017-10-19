@@ -33,9 +33,23 @@ class CS():
         except:
             print("No such rule exists in this CS.")
 
+
+    def add(self, sentence):
+        if (isinstance(sentence, Fact)):
+            self.add_fact(sentence)
+        else:
+            self.add_rule(sentence)
+
+    def remove(self, sentence):
+        if (isinstance(sentence, Fact)):
+            self.remove_fact(sentence)
+        else:
+            self.remove_rule(sentence)
+
+
     # Check if a rule is already present in the CS
     def rule_in_CS(self, rule):
-        return rule.printable() in self.facts
+        return rule.printable() in self.rules
 
     #Return the printable version of all the facts in the commitment store
     def get_printable_facts(self):
@@ -61,7 +75,13 @@ class CS():
         for key,value in self.rules.items():
             rule = value
             conditions_proven = 0
-            unified_conclusion = rule.conclusion.unify(fact)
+            """if(not(isinstance(value, Fact))):
+                continue"""
+            try:
+                unified_conclusion = rule.conclusion.unify(fact)
+            except:
+                print("WARNING: CAN'T UNIFY!")
+                continue
             #If a rule is found where the conclusion matches the fact
             #The rule also has to be a valid rule
             if(self.facts_match(unified_conclusion, fact) and rule.property == "valid"):
@@ -74,11 +94,12 @@ class CS():
                         #print("Fact:", value.printable())
                         #print("Condition: ", unified_condition.printable())
                         #If the found fact matches the condition of the rule, increment
-                        if(self.facts_match(value, unified_condition)):
+                        #check if the two facts are actually facts and not rules!
+                        if(isinstance(value, Fact) and self.facts_match(value, unified_condition)):
                             conditions_proven = conditions_proven + 1
                             #print("Condition proven!")
                             break
-
+                        
             #If every condition is proven, the rule proves the conclusion based on the conditions
             #This doesn't allow for chaining (yet). Therefore, conditions have to be facts within the commitment store
             #already.
@@ -87,13 +108,15 @@ class CS():
                 applicable_rules.append(rule)
         return applicable_rules
 
+
     #Returns true if two facts match
     def facts_match(self, fact1, fact2):
+        print("Fact 1:", fact1.printable())
+        print("Fact 2:", fact2.printable())
         #Check if the predicate name, arity and negation matches
         return (fact1.predicate == fact2.predicate and
            fact1.equal_args(fact2) and
             fact1.negation == fact2.negation)
-
 
 
 
