@@ -33,6 +33,20 @@ class CS():
         except:
             print("No such rule exists in this CS.")
 
+
+    def add(self, sentence):
+        if (isinstance(sentence, Fact)):
+            self.add_fact(sentence)
+        else:
+            self.add_rule(sentence)
+
+    def remove(self, sentence):
+        if (isinstance(sentence, Fact)):
+            self.remove_fact(sentence)
+        else:
+            self.remove_rule(sentence)
+
+
     # Check if a rule is already present in the CS
     def rule_in_CS(self, rule):
         return rule.printable() in self.rules
