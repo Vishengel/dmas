@@ -3,7 +3,8 @@ check if a rule applies by either giving the rule conditions or rules to check, 
 simplified version of forward or backward chaining
 """
 from Fact import *
-
+from Rule import *
+import copy
 class CS():
     def __init__(self):
         self.facts = {}
@@ -25,6 +26,7 @@ class CS():
         return fact.printable() in self.facts
 
     def add_rule(self, rule):
+        rule.number = len(self.rules) + 1
         self.rules[rule.printable()] = rule
 
     def remove_rule(self, rule):
@@ -50,6 +52,14 @@ class CS():
     # Check if a rule is already present in the CS
     def rule_in_CS(self, rule):
         return rule.printable() in self.rules
+
+    def in_CS(self, sentence):
+        if (isinstance(sentence, Fact)):
+            return self.fact_in_CS(sentence)
+        else:
+            claim = copy.copy(sentence)
+            claim.property = "valid"
+            return self.rule_in_CS(sentence)
 
     #Return the printable version of all the facts in the commitment store
     def get_printable_facts(self):
@@ -107,6 +117,33 @@ class CS():
             if(conditions_proven == len(rule.conditions)):
                 applicable_rules.append(rule)
         return applicable_rules
+
+    def prove_rule_exclusion(self, rule):
+        print("TOTAL RULE:",rule.printable())
+        # Store rules that can prove the excluded rule
+        applicable_rules = []
+        # Go through every rule
+        # Check if the rule's conditions imply the fact (conclusion)
+        # Return the conditions and rules corresponding to them
+        for key, value in self.rules.items():
+            rule = value
+            conditions_proven = 0
+            excluded_rule = rule.conclusion
+            #Check if this conclusion is a rule with the 'excluded' property
+            if (excluded_rule.property == "excluded"):
+                # Check if conditions match facts in the commitment store
+                for condition in rule.conditions:
+                    if(not(self.fact_in_CS(condition))):
+                        break
+                    else:
+                         conditions_proven = conditions_proven + 1
+
+            # If every condition is proven, this means that the exclusion rule is applies
+            if (conditions_proven == len(rule.conditions)):
+                applicable_rules.append(rule)
+        return applicable_rules
+
+
 
 
     #Returns true if two facts match

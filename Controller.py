@@ -191,6 +191,16 @@ class Controller():
             move.sentence =  reason
             self.add_sub_dialogue(move)
 
+
+        elif(move.move_type == "applies" and move.sentence.property == "excluded"):
+            # Get a rule that excludes the claimed rule in question
+            # Take the first one for now
+            reason = self.current_dialogue.turn.reason_rules[0]
+            reason.property = "applies"
+            move.sentence = reason
+            self.add_sub_dialogue(move)
+
+
         elif (move.move_type == "applies"):
             # Get a rule that has the reason as a conclusion
             # Get the first rule for now
@@ -209,6 +219,15 @@ class Controller():
 
             self.current_dialogue.swap_turns(self.model.prosecutor, self.model.defendant)
 
+        elif (move.move_type == "question-fact"):
+            # Set dialogue move to the new move
+            self.current_dialogue.move = move
+            # Make new move show-able on the screen
+            self.model.dialogue_history.append(self.current_dialogue.move.printable(self.current_dialogue.ID))
+
+            self.current_dialogue.swap_turns(self.model.prosecutor, self.model.defendant)
+
+
         elif (move.move_type == "deny" or move.move_type == "arbiter"):
                 self.add_sub_dialogue(move)
 
@@ -218,11 +237,16 @@ class Controller():
             move.sentence = rule
             self.add_sub_dialogue(move)
 
+        elif(move.move_type == "excluded"):
+            rule = copy.copy(move.sentence)
+            rule.property = "excluded"
+            move.sentence = rule
+            self.add_sub_dialogue(move)
+
     def add_sub_dialogue(self, move):
         old_dialogue_ID = self.current_dialogue.ID
         # Add sentence to proponent's commitment store
         self.current_dialogue.turn.commitment_store.add(move.sentence)
-
 
         # old_sentence = self.current_dialogue.sentence
         # negated_sentence = Fact(old_sentence.predicate, old_sentence.args, old_sentence.negation)

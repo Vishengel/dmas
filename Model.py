@@ -20,18 +20,31 @@ class Model():
         #Add starting facts
         first_fact = Fact('borrowed_from', ('Defendant', 'Prosecutor', 10000), True)
         self.prosecutor.commitment_store.add_fact(first_fact)
+        self.prosecutor.commitment_store.add(Fact('older_than', ('loan', '30'), True))
         self.defendant.commitment_store.add_fact(first_fact)
         #self.defendant.commitment_store.add_fact( Fact('owes', ('Defendant', 'Prosecutor', 10000), False) )
 
         #Add starting rules
         starting_rule = Rule([Fact('borrowed_from', ('x', 'y', 'amount'), True)]
                           ,Fact('owes', ('x', 'y', 'amount'), True), 'valid')
-        self.prosecutor.commitment_store.add_rule(starting_rule)
-        self.defendant.commitment_store.add_rule(starting_rule)
+        self.prosecutor.commitment_store.add(starting_rule)
+        self.defendant.commitment_store.add(starting_rule)
 
-        self.defendant.commitment_store.add_rule(Rule([Fact('loves', ('x', 'y'), True)]
+        self.defendant.commitment_store.add(Rule([Fact('loves', ('x', 'y'), True)]
                           ,Fact('owes', ('x', 'y', 'amount'), False), 'valid'))
-        self.defendant.commitment_store.add_fact(Fact('loves', ('Defendant', 'Prosecutor'), True))
+
+        self.defendant.commitment_store.add(Rule([Fact('older_than', ('loan','30'), True)]
+                                                 , Rule([Fact('borrowed_from', ('x', 'y', 'amount'), True)]
+                          ,Fact('owes', ('x', 'y', 'amount'), True), 'excluded'),'valid'))
+
+
+        self.defendant.commitment_store.add(Fact('loves', ('Defendant', 'Prosecutor'), True))
+        self.defendant.commitment_store.add(Fact('older_than', ('loan','30'), True))
+
+        self.judge.commitment_store.add(Rule([Fact('older_than', ('loan', '30'), True)]
+                                             , Rule([Fact('borrowed_from', ('x', 'y', 'amount'), True)]
+                                                    , Fact('owes', ('x', 'y', 'amount'), True), 'excluded'),
+                                             'valid'))
 
         self.game_over = False
 
