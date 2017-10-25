@@ -4,7 +4,7 @@ class Rule():
         self.conditions = conditions
         self.conclusion = conclusion
         self.property = property
-
+        self.number = 0
 
     #Return a nice, printable rule string
     def printable(self):
