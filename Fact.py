@@ -46,6 +46,13 @@ class Fact():
         #This implies that order in the args is very important!
         #This may need to be adjusted when this becomes a problem...
         altered_fact.args = fact.args[:len(self.args)]
+        #Get the difference between the new args and the original args
+        difference = len(self.args) - len(altered_fact.args)
+
+
+
+
+
         return altered_fact
 
     #Returns true if both facts have the same arguments

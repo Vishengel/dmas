@@ -19,6 +19,7 @@ class View(Frame):
         self.create_buttons()
 
 
+
     def create_frames(self):
         #top screen, contains both dialog frames
         self.main_frame = Frame(self, width=self.width / 2, height=self.height / 2, relief=RAISED, borderwidth=3)

@@ -95,11 +95,13 @@ class CS():
             #If a rule is found where the conclusion matches the fact
             #The rule also has to be a valid rule
             if(self.facts_match(unified_conclusion, fact) and rule.property == "valid"):
+                #print(unified_conclusion.printable())
                 #Check if conditions match facts in the commitment store
                 for condition in rule.conditions:
                     #print("condition: ",condition.printable())
                     # Unify the conditions of the match with the fact
                     unified_condition = condition.unify(fact)
+                    print(unified_condition.printable())
                     for key,value in self.facts.items():
                         #print("Fact:", value.printable())
                         #print("Condition: ", unified_condition.printable())
@@ -119,7 +121,7 @@ class CS():
         return applicable_rules
 
     def prove_rule_exclusion(self, rule):
-        print("TOTAL RULE:",rule.printable())
+        #print("TOTAL RULE:",rule.printable())
         # Store rules that can prove the excluded rule
         applicable_rules = []
         # Go through every rule
@@ -148,8 +150,8 @@ class CS():
 
     #Returns true if two facts match
     def facts_match(self, fact1, fact2):
-        print("Fact 1:", fact1.printable())
-        print("Fact 2:", fact2.printable())
+        #print("Fact 1:", fact1.printable())
+        #print("Fact 2:", fact2.printable())
         #Check if the predicate name, arity and negation matches
         return (fact1.predicate == fact2.predicate and
            fact1.equal_args(fact2) and

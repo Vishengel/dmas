@@ -31,7 +31,7 @@ class Agent():
             possible_moves = ["question", "accept"]
             if(self.commitment_store.rule_in_CS(opponent_move.sentence)):
                 possible_moves.remove("question")
-            print(possible_moves)
+            #print(possible_moves)
 
 
         # If the opponent claims that a rule applies, the agent can question this, or claim that this rule is
@@ -58,21 +58,21 @@ class Agent():
         #If opponent claimed a new sentence, agent can choose
         #to question, deny, refuse or accept this sentence
         elif(opponent_move.move_type == "claim"):
-            possible_moves =  ["question", "deny", "accept"]
-            #possible_moves =  ["deny"]
+            possible_moves =  ["deny", "question", "accept"]
+
+            #A rule cannot be denied
             if(isinstance(opponent_move.sentence, Rule)):
                 possible_moves.remove("deny")
-            """sentence = Fact(opponent_move.sentence.predicate, opponent_move.sentence.args, opponent_move.sentence.negation)
-            #If the negation of the sentence is already in the agent's commitment store,
-            #then denial is not allowed!
-            print("Negated sentence:", sentence.printable())
-            print("Original sentence:", opponent_move.sentence.printable())
-            if(self.commitment_store.fact_in_CS(sentence)):
-                print("Denial not allowed!")
+
+           #Try to prove the negation of the claim, to see if denial is possible
+            claim = copy.copy(opponent_move.sentence)
+            claim.negation = not(claim.negation)
+
+            reason_rules = self.commitment_store.prove_conclusion(claim)
+            self.reason_rules = reason_rules
+            if (len(reason_rules) == 0):
                 possible_moves.remove("deny")
-            sentence.negation = not(sentence.negation)
-            """
-            #return possible_moves
+
 
         # If opponent questioned a reason, the agent has to search for a rule
         # that implies his reason.
@@ -102,12 +102,14 @@ class Agent():
         # If opponent questioned a claim, agent has to search for a reason
         # that defends his claim
         elif (opponent_move.move_type == "question" or opponent_move.move_type == "question-fact"):
+            possible_moves = ["reason", "arbiter", "withdraw"]
             claim = opponent_move.sentence
             #claim.property = ""
             # Search the commitment store for rules that prove the claim
             # Get rules that prove the claim
             #print(claim.printable())
             reason_rules = self.commitment_store.prove_conclusion(claim)
+
             # for rule in reason_rules:
             # reasons.append(rule.conditions)
             # Select one of the possible reasons
@@ -115,20 +117,18 @@ class Agent():
             self.reason_rules = reason_rules
             # If at least 1 reason is found, a reason move is possible
             #print(len(reason_rules))
-            if (len(reason_rules) > 0):
+            if (len(reason_rules) == 0):
                 #return ["reason", "withdraw"]
-                possible_moves = ["reason", "withdraw"]
+                possible_moves.remove("reason")
             # Else, a claim cannot be defended and has to be withdrawn
-            else:
-                #return ["withdraw"]
-                possible_moves = ["withdraw"]
+
 
         # If opponent defends his claim with a reason,
         # the agent can choose to question this reason, or question
         #the states fact in the rezson.
         elif (opponent_move.move_type == "reason"):
             #return ["question", "accept"]
-            possible_moves = ["question-fact", "question", "accept"]
+            possible_moves = ["question", "question-fact", "accept"]
             reason = copy.copy(opponent_move.sentence)
             reason.property = ""
             # Questioning the fact in the reason can only be done if the fact
@@ -158,12 +158,11 @@ class Agent():
                 possible_moves.remove("withdraw")
                 possible_moves.append("accept")
 
-        print(possible_moves)
+
         return possible_moves
 
 
     def select_move(self, movelist, sentence):
-        print("Currently moving:", self.name)
         if("valid" in movelist):
             return Move("valid", sentence, self)
         move_type = ""

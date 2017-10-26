@@ -6,6 +6,7 @@ class Rule():
         self.property = property
         self.number = 0
 
+
     #Return a nice, printable rule string
     def printable(self):
         condition_list = []

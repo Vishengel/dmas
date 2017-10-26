@@ -5,6 +5,6 @@ class Judge(Agent):
         super().__init__(name, state, strategy, commitment_store, move)
 
     def arbiter_call(self, rule):
-        return self.commitment_store.rule_in_CS(rule)
+        return self.commitment_store.in_CS(rule)
 
 

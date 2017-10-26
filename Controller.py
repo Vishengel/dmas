@@ -25,7 +25,7 @@ class Controller():
 
         #Create starting / main move
         #self.main_claim = Fact('owes', ('Defendant', 'Prosecutor', 10000), True)
-        self.main_claim = Fact('valid_contract', ('Prosecutor', 'Defendant'), True)
+        self.main_claim = Fact('valid_contract', ('Defendant', 'Prosecutor'), True)
         starting_move = Move('claim',  self.main_claim, self.model.prosecutor)
         self.model.prosecutor.last_move = starting_move
         #If a sentence is claimed, it has to be added to the commitment store!
@@ -60,16 +60,21 @@ class Controller():
             # Remove moves that were already performed by this agent in this dialogue, because
             # repetition of same moves in a dialogue is not allowed
             #Set the latest agent move of the dialogue to the current move
-            movelist = self.model.remove_repeating_moves(movelist, self.current_dialogue)
 
+            movelist = self.model.remove_repeating_moves(movelist, self.current_dialogue)
+            #print(self.current_dialogue.ID, self.model.prosecutor.name,self.current_dialogue.prosecutor_move_list,
+                  #self.model.defendant.name,self.current_dialogue.defendant_move_list)
             #print("%s can make the following moves in dialogue %s:" % (self.current_dialogue.turn.name, self.current_dialogue.ID), movelist)
             #Based on the move list, select an appropriate move according to the agent's strategy
-            #Add this move to one of the two agent's latest move, in this dialogue
+            #Add this move to one of the two agent's latest move, in this dialogue, unless this move created a
+            #sub-dialogue.
             move = self.current_dialogue.turn.select_move(movelist, self.current_dialogue.sentence)
-            if (self.current_dialogue.turn == self.model.prosecutor):
-                self.current_dialogue.last_prosecutor_move = move
-            else:
-                self.current_dialogue.last_defendant_move = move
+            if(move.move_type not in ["accept", "claim", "deny", "reason", "applies", "valid"]):
+                print(move.move_type)
+                if (self.current_dialogue.turn == self.model.prosecutor):
+                    self.current_dialogue.last_prosecutor_move = move
+                else:
+                    self.current_dialogue.last_defendant_move = move
 
 
             #Add move to the dialogue's list of moves for this agent
@@ -121,7 +126,12 @@ class Controller():
             judgement = self.model.judge.arbiter_call(move.sentence)
             #If the judge decides that a rule is valid, add the rule to both parties' commitment store
             if(judgement == True):
-                self.model.dialogue_history.append("%s. %s" % (self.current_dialogue.ID, "Judge: this rule is valid."))
+                if(isinstance(move.sentence,Rule)):
+                    self.model.dialogue_history.append("%s. %s" % (self.current_dialogue.ID, "Judge: this rule is valid."))
+                else:
+                    self.model.dialogue_history.append(
+                        "%s. %s" % (self.current_dialogue.ID, "Judge: this is a fact."))
+
                 self.model.prosecutor.commitment_store.add(move.sentence)
                 self.model.defendant.commitment_store.add(move.sentence)
 
@@ -153,7 +163,6 @@ class Controller():
                     negated_sentence = Fact(move.sentence.predicate, move.sentence.args, move.sentence.negation)
                     #print("Sentence:", move.sentence.printable())
                     #print("Negated sentence:", negated_sentence.printable())
-
                     agent.commitment_store.remove(negated_sentence)
                 agent.commitment_store.add(move.sentence)
 
@@ -222,6 +231,7 @@ class Controller():
 
         elif (move.move_type == "question-fact"):
             # Set dialogue move to the new move
+            move.sentence.property = ""
             self.current_dialogue.move = move
             # Make new move show-able on the screen
             self.model.dialogue_history.append(self.current_dialogue.move.printable(self.current_dialogue.ID))
