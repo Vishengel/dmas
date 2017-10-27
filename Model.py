@@ -74,7 +74,7 @@ class Model():
             self.defendant.commitment_store.add(fifth_fact)
 
             #Add starting rules
-            first_rule = Rule([first_fact]
+            first_rule = Rule([Fact('offer_was_heard', ('party_1', 'party_2'), True)]
                               ,Fact('valid_contract', ('party_1', 'party_2'), True), 'valid')
             self.prosecutor.commitment_store.add(first_rule)
             self.defendant.commitment_store.add(first_rule)

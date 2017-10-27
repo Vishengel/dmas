@@ -2,8 +2,8 @@ from Controller import *
 import ctypes
 
 def main():
-    caseID = "loan"
-    #caseID = "contract"
+    #caseID = "loan"
+    caseID = "contract"
 
     #strategy = "random"
     strategy = "exhaustive"

@@ -16,6 +16,9 @@ class Controller():
         self.model = Model(caseID)
         self.view = View(width, height)
         self.caseID = caseID
+        #0 - case selection
+        #1 - dialogue game
+        self.state = 0
 
     def run(self):
         self.view.run_button.config(command=self.execute_step)

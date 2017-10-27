@@ -27,6 +27,7 @@ class View(Frame):
         self.main_frame.pack(side=TOP, fill=BOTH)
         self.main_frame.grid_propagate(False)
 
+
         # dialog frame
         self.dialog_frame = Frame(self.main_frame, width=self.width/2, height=self.height / 2, relief=RAISED, borderwidth=3)
         self.dialog_frame.pack_propagate(0)
