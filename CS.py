@@ -140,6 +140,7 @@ class CS():
             excluded_rule = rule.conclusion
             #Check if this conclusion is a rule with the 'excluded' property
             if (excluded_rule.property == "excluded"):
+                print( excluded_rule.printable())
                 # Check if conditions match facts in the commitment store
                 for condition in rule.conditions:
                     if(not(self.fact_in_CS(condition))):
@@ -151,7 +152,6 @@ class CS():
             if (conditions_proven == len(rule.conditions)):
                 applicable_rules.append(rule)
         return applicable_rules
-
 
 
 
