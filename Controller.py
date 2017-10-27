@@ -73,7 +73,7 @@ class Controller():
             #Add this move to one of the two agent's latest move, in this dialogue, unless this move created a
             #sub-dialogue.
             move = self.current_dialogue.turn.select_move(movelist, self.current_dialogue.sentence)
-            if(move.move_type not in ["accept", "claim", "deny", "reason", "applies", "valid"]):
+            if(move.move_type not in ["claim", "deny", "reason", "applies", "valid"]):
                 print(move.move_type)
                 if (self.current_dialogue.turn == self.model.prosecutor):
                     self.current_dialogue.last_prosecutor_move = move

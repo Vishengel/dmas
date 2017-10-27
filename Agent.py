@@ -40,18 +40,20 @@ class Agent():
             possible_moves = ["excluded", "question", "accept"]
             self.reason_rules = self.commitment_store.prove_rule_exclusion(opponent_move.sentence)
             #If no exclusion rules are present, exclusion move is not possible
-            if(len(self.reason_rules ) == 0):
+            if(len(self.reason_rules ) == 0 or opponent_move.sentence.conclusion.property == "excluded"):
                 possible_moves.remove("excluded")
-            #print(self.exclusion_rules[0].printable() )
+
 
 
         #If opponent has accepted an exclusion of the agent's  rule, withdraw the applicability of this rule
-        elif (opponent_move.move_type == "excluded" and self.last_move.move_type == "accept"):
-            possible_moves = ["withdraw"]
+        #elif (opponent_move.move_type == "excluded" and self.last_move.move_type == "accept"):
+            # = ["withdraw"]
 
         #If opponent claims that the agent's rule is excluded, this can be questioned or accepted
-        elif (opponent_move.move_type == "excluded"):
+        elif (opponent_move.move_type == "excluded" and self.last_move.move_type != "accept"):
             possible_moves = ["question", "accept"]
+
+
 
 
         #If opponent claimed a new sentence, agent can choose
@@ -165,7 +167,10 @@ class Agent():
                 possible_moves.remove("withdraw")
                 possible_moves.append("accept")
 
-
+        if(claim_proponent.name == self.name):
+            if("accept" in possible_moves):
+                possible_moves.remove("accept")
+                possible_moves.append("withdraw")
         return possible_moves
 
 
