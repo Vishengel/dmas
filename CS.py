@@ -74,6 +74,13 @@ class CS():
             self.rule_list.append(value)
         return "\n".join(self.rule_list)
 
+    #Check if the commitment store contains an accepted reason for the given sentence
+    def contains_reason(self, sentence):
+        for key, facts in self.facts.items():
+            if(facts.claim != None):
+                if(facts.claim.printable() == sentence.printable()):
+                    return True
+        return False
 
     #Ask the commitment store whether a given fact can be proven with the current facts and rules
     def prove_conclusion(self, fact):

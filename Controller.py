@@ -86,7 +86,7 @@ class Controller():
             #Set the new move to be the latest move done by the agent
             self.current_dialogue.turn.last_move = move
            # print( self.current_dialogue.turn.last_move.printable( self.current_dialogue.ID,
-                                                  #self.current_dialogue.turn))
+                                    #self.current_dialogue.turn))
             #Execute the chosen move in the dialogue game
             self.execute_move(move, self.current_dialogue.turn)
             #Set the dialogue to the appropriate next one before the next turn
