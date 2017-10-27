@@ -1,0 +1,53 @@
+facts:
+ -
+  pred:
+   - borrowed_from
+  args:
+   - defendant
+   - prosecutor
+   - 10000
+  neg:
+   - True
+  cs:
+   - prosecutor
+   - defendant
+
+ -
+  pred:
+   - owes
+  args:
+   - defendant
+   - prosecutor
+   - 10000
+  neg:
+   - True
+  cs:
+   - prosecutor
+
+ -
+  pred:
+   - older_than
+  args:
+   - loan
+   - 30
+  neg:
+   - True
+  cs:
+   - prosecutor
+   - defendant
+
+ -
+  pred:
+   - loves
+  args:
+   - defendant
+   - prosecutor
+
+
+rules:
+ -
+  cond:
+   -
+
+  conc:
+  prop:
