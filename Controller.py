@@ -8,13 +8,14 @@ from Dialogue import *
 from Move import *
 
 class Controller():
-    def __init__(self, width, height):
+    def __init__(self, width, height, caseID):
         self.root = Tk()
         self.root.resizable(False, False)
         self.width = width
         self.height = height
-        self.model = Model()
+        self.model = Model(caseID)
         self.view = View(width, height)
+        self.caseID = caseID
 
     def run(self):
         self.view.run_button.config(command=self.execute_step)
@@ -24,8 +25,11 @@ class Controller():
         self.right_cs_string = StringVar()
 
         #Create starting / main move
-        #self.main_claim = Fact('owes', ('Defendant', 'Prosecutor', 10000), True)
-        self.main_claim = Fact('valid_contract', ('Defendant', 'Prosecutor'), True)
+        if self.caseID == "loan":
+            self.main_claim = Fact('owes', ('Defendant', 'Prosecutor', 10000), True)
+        elif self.caseID == "contract":
+            self.main_claim = Fact('valid_contract', ('Defendant', 'Prosecutor'), True)
+
         starting_move = Move('claim',  self.main_claim, self.model.prosecutor)
         self.model.prosecutor.last_move = starting_move
         #If a sentence is claimed, it has to be added to the commitment store!
