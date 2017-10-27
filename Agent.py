@@ -54,7 +54,6 @@ class Agent():
             possible_moves = ["question", "accept"]
 
 
-
         #If opponent claimed a new sentence, agent can choose
         #to question, deny, refuse or accept this sentence
         elif(opponent_move.move_type == "claim"):
@@ -67,11 +66,17 @@ class Agent():
            #Try to prove the negation of the claim, to see if denial is possible
             claim = copy.copy(opponent_move.sentence)
             claim.negation = not(claim.negation)
-
             reason_rules = self.commitment_store.prove_conclusion(claim)
             self.reason_rules = reason_rules
             if (len(reason_rules) == 0):
                 possible_moves.remove("deny")
+
+            #If agent has already accepted a reason for a claim, he can no longer deny this claim
+            claim.negation = not(claim.negation)
+            if(self.commitment_store.contains_reason(claim)):
+                possible_moves.remove("deny")
+
+
 
 
         # If opponent questioned a reason, the agent has to search for a rule
@@ -103,6 +108,8 @@ class Agent():
         # that defends his claim
         elif (opponent_move.move_type == "question" or opponent_move.move_type == "question-fact"):
             possible_moves = ["reason", "arbiter", "withdraw"]
+            if(opponent_move.move_type == "question"):
+                possible_moves.remove("arbiter")
             claim = opponent_move.sentence
             #claim.property = ""
             # Search the commitment store for rules that prove the claim
